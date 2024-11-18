@@ -1,19 +1,17 @@
-# bfq
 
-A new Flutter project.
+# Bandung Food Quest (BFQ)
 
-## Getting Started
+## Anggota Kelompok
+Muhammad Abyasa Pratama (2306207663)
+Raja Rafael Pangihutan Sitorus (2306244923)
+Daniel Ferdiansyah (2306275052)
+Safira Salma Humaira (2306245850)
+Evelyn Depthios (2306207543)
 
-This project is a starting point for a Flutter application.
+## Deskripsi Aplikasi
+Bandung Food Quest (BFQ) adalah sebuah situs web e-commerce yang berfokus pada produk-produk kuliner khas Bandung. Website ini menyediakan platform bagi pelanggan untuk menemukan dan membeli berbagai produk makanan khas kota tersebut. Pada aplikasi ini, admin dapat secara langsung mengelola katalog produk dengan menambahkan, mengedit, dan menghapus produk. Sementara itu, customer dan guest hanya dapat melihat katalog produk pada modul main app (home page).
 
-A few resources to get you started if this is your first Flutter project:
+Aplikasi ini terdiri dari beberapa modul lain yang hanya dapat diakses oleh admin dan customer. Pertama, modul otentikasi dan pengelolaan profil pengguna, yang mencakup fitur registrasi, login, tampilan profil pengguna, dan pengeditan profil. Kedua, modul kategori yang menyediakan fitur pencarian dan filter produk. Ketiga, modul blog yang memungkinkan pengguna untuk mengunggah, mengedit, dan menghapus artikel milik mereka sendiri. Terakhir, modul forum yang memungkinkan pengguna untuk membuat, mengedit, dan menghapus thread, serta berpartisipasi dengan memberikan balasan pada thread tersebut.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+Kelompok kami memilih kota Bandung sebagai fokus karena Bandung dikenal sebagai kota dengan kekayaan kuliner yang unggul. Kami ingin mendukung perkembangan UMKM yang memiliki potensi tinggi di bidang kuliner khas Bandung. Melalui penerapan modul-modul pada website kami, diharapkan terjadi peningkatan penjualan serta interaksi yang lebih baik antara customer dan admin.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
-
-
-hahahahahaah
