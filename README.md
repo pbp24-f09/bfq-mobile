@@ -20,33 +20,31 @@ Aplikasi ini terdiri dari beberapa modul lain yang hanya dapat diakses oleh admi
 Kelompok kami memilih kota Bandung sebagai fokus karena Bandung dikenal sebagai kota dengan kekayaan kuliner yang unggul. Kami ingin mendukung perkembangan UMKM yang memiliki potensi tinggi di bidang kuliner khas Bandung. Melalui penerapan modul-modul pada website kami, diharapkan terjadi peningkatan penjualan serta interaksi yang lebih baik antara customer dan admin.
 
 ## Daftar Modul yang Akan Diimplementasikan:
-1. **Main App (Home Page)**
-   - **Navbar**: Navbar untuk Admin dan Customer berisi menu Home, Categories (dropdown), Forum, Hello [nama user] (link ke edit user profile), dan Logout. Lalu, Navbar untuk Guest (landing page) berisi menu Home, Categories, dan Login. Navbar ini support mobile view.
-   - **Header, Footer, Base Template**: Di folder root template, standar untuk seluruh halaman.
+1. **Main App (Home Page)** - Daniel
+   - **Left Drawer (di semua page)**: Widget Left Drawer untuk Admin dan Customer berisi menu Home, Categories (dropdown), Forum, Hello [nama user] (link ke edit user profile), dan Logout. Lalu, Left Drawer untuk Guest (landing page) berisi menu Home, Login, dan Register.
    - **Homepage as Admin**: Bisa menambahkan, mengedit, dan menghapus produk.
    - **Homepage as Customer**: Menampilkan produk dalam pop-up detail.
    - **Carousel**: Foto-foto Bandung dengan overview singkat.
    - **Product Display**: Admin dapat menambah, mengedit, dan menghapus produk. Customer hanya melihat detail produk.
-   - **Search Bar**: Customer dan Admin dapat search berdasarkan nama makanan.
    - **Landing Page**: Landing page berisi fitur-fitur yang hampir sama dengan home page, akan tetapi navbar hanya berisi menu Home dan Login. Dalam landing page ini tetap menampilkan produk-produk.
 
-2. **Categories**
+2. **Categories** - Abyasa
    - **Search Bar**: Search produk menggunakan keyword nama produk.
    - **Filter**: Filtering produk berdasarkan kategori.
    - **Product Display**: Menampilkan produk berdasarkan kategori atau secara keseluruhan.
 
-3. **Forum Diskusi**
+3. **Forum Diskusi** - Raja
    - **Forum**: Menampilkan postingan forum dari semua pengguna (nama dan umur ditampilkan).
    - **Tambah Topik**: Menambahkan topik untuk forum diskusi baru.
    - **Reply dan Edit Forum**: Edit dan reply post berlaku untuk seluruh akun.
    - **Delete Forum**: Hapus post hanya berlaku untuk post akun tersebut.
 
-4. **User Info & Authentication**
+4. **User Info & Authentication** - Evelyn
    - **Register**: Nama Lengkap, Umur, Gender, No. Telepon, Username, Password, Role.
    - **Login**: Username dan Password.
-   - **User Profile**: Menampilkan profil user, edit profil dan ganti password.
+   - **User Profile**: Menampilkan profil user, edit profil, delete akun, dan ganti password.
 
-5. **Blog/Artikel**
+5. **Blog/Artikel** - Safira
    - **Post Artikel**: Judul, Topik, Artikel, Penulis.
    - **Display Artikel**: Menampilkan artikel.
    - **My Article**: Lihat, edit, dan hapus artikel sendiri.
