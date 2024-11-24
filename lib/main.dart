@@ -46,8 +46,8 @@ class MyApp extends StatelessWidget {
             background: const Color(0xFF325D41), // Hijau terang
             error: const Color(0xFF994E12), // Coklat gelap
             onPrimary: Colors.white, // Teks pada elemen primer
-            onSecondary: Colors.white, // Teks pada elemen sekunder
-            onSurface: Colors.white, // Teks pada elemen permukaan
+            onSecondary: Colors.black, // Teks pada elemen sekunder
+            onSurface: Colors.black, // Teks pada elemen permukaan
             onBackground: Colors.white, // Teks pada latar belakang
           ),
         ),

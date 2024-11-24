@@ -1,10 +1,9 @@
-import 'package:bfq/screens/main/menu.dart';
 import 'package:flutter/material.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
 import 'package:bfq/screens/authentication/register.dart';
-import '../main/menu_customer.dart';
-import '../main/menu_admin.dart';
+import 'package:bfq/screens/main/menu_customer.dart';
+import 'package:bfq/screens/main/menu_admin.dart';
 
 void main() {
   runApp(const LoginApp());
@@ -49,18 +48,16 @@ class _LoginPageState extends State<LoginPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              'Test',
+              'Login',
               style: TextStyle(
-                color: Theme.of(context).colorScheme.onPrimary,  // Dark pink color for the title
+                color: Theme.of(context).colorScheme.onPrimary,
                 fontWeight: FontWeight.w900,
                 fontSize: 28.0,
               ),
             ),
           ],
         ),
-        surfaceTintColor: Theme.of(context).colorScheme.primary, // Pastikan warna tetap sama
-        scrolledUnderElevation: 0, // Mencegah perubahan warna saat di-scroll
-        backgroundColor: Theme.of(context).colorScheme.primary, // Light pink background for the AppBar
+        backgroundColor: Theme.of(context).colorScheme.primary,
       ),
       body: Center(
         child: SingleChildScrollView(
@@ -112,49 +109,82 @@ class _LoginPageState extends State<LoginPage> {
                   const SizedBox(height: 24.0),
                   ElevatedButton(
                     onPressed: () async {
-                      String username = _usernameController.text;
-                      String password = _passwordController.text;
+                      String username = _usernameController.text.trim();
+                      String password = _passwordController.text.trim();
+
+                      if (username.isEmpty || password.isEmpty) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text("Please fill in both fields."),
+                            backgroundColor: Colors.red,
+                          ),
+                        );
+                        return;
+                      }
 
                       // Kirim permintaan login
-                      final response = await request.login("http://127.0.0.1:8000/login-flutter/", {
-                        'username': username,
-                        'password': password,
-                      });
-
+                      final response = await request.login(
+                        "http://127.0.0.1:8000/login-flutter/",
+                        {
+                          'username': username,
+                          'password': password,
+                        },
+                      );
                       if (request.loggedIn) {
-                        String role = response['role']; // Ambil role dari respons
-                        String message = response['message'];
-                        String uname = response['username'];
+                        // Validasi apakah respons memiliki role dan pesan
+                        if (response.containsKey('role') &&
+                            response.containsKey('message')) {
+                          String role = response['role'];
+                          String message = response['message'];
+                          String uname = response['username'];
 
-                        if (context.mounted) {
-                          // Redirect ke halaman berdasarkan role
-                          if (role == 'customer') {
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(builder: (context) => const MenuCustomerPage()),
-                            );
-                          } else if (role == 'admin') {
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(builder: (context) => const MenuAdminPage()),
-                            );
+                          if (context.mounted) {
+                            // Redirect ke halaman berdasarkan role
+                            if (role == 'customer') {
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const MenuCustomerPage()),
+                              );
+                            } else if (role == 'admin') {
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const MenuAdminPage()),
+                              );
+                            }
+
+                            // Tampilkan pesan sukses
+                            ScaffoldMessenger.of(context)
+                              ..hideCurrentSnackBar()
+                              ..showSnackBar(
+                                SnackBar(
+                                  content: Text("$message Welcome, $uname."),
+                                  backgroundColor: Colors.green,
+                                ),
+                              );
                           }
-
-                          // Tampilkan pesan sukses
-                          ScaffoldMessenger.of(context)
-                            ..hideCurrentSnackBar()
-                            ..showSnackBar(
-                              SnackBar(content: Text("$message Welcome, $uname.")),
-                            );
+                        } else {
+                          // Respons API tidak valid
+                          showDialog(
+                            context: context,
+                            builder: (context) => const AlertDialog(
+                              title: Text('Invalid Response'),
+                              content: Text(
+                                  'The server did not provide the expected response.'),
+                            ),
+                          );
                         }
                       } else {
+                        // Login gagal
                         if (context.mounted) {
-                          // Tampilkan dialog jika login gagal
                           showDialog(
                             context: context,
                             builder: (context) => AlertDialog(
                               title: const Text('Login Failed'),
-                              content: Text(response['message']),
+                              content: Text(response['message'] ??
+                                  'Invalid username or password.'),
                               actions: [
                                 TextButton(
                                   child: const Text('OK'),
@@ -176,20 +206,20 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     child: const Text('Login'),
                   ),
-
                   const SizedBox(height: 36.0),
                   GestureDetector(
                     onTap: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const RegisterPage()),
+                          builder: (context) => const RegisterPage(),
+                        ),
                       );
                     },
                     child: Text(
                       'Don\'t have an account? Register',
                       style: TextStyle(
-                        color: Theme.of(context).colorScheme.onPrimary,
+                        color: Theme.of(context).colorScheme.primary,
                         fontSize: 16.0,
                       ),
                     ),
