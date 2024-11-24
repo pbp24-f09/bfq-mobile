@@ -19,134 +19,134 @@ class _MenuPageState extends State<MenuPage> {
   }
 
   void _showProductDetails(BuildContext context, Product product) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Container(
+          width: MediaQuery.of(context).size.width * 0.6,
+          decoration: BoxDecoration(
+            color: Colors.white,
             borderRadius: BorderRadius.circular(20),
           ),
-          child: Container(
-            width: MediaQuery.of(context).size.width * 0.85,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                // Close button and title section
-                Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    // Title
-                    Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.fromLTRB(16, 16, 40, 16),
-                      decoration: const BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              // Close button and title section
+              Stack(
+                alignment: Alignment.center,
+                children: [
+                  // Title
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.fromLTRB(16, 16, 40, 16),
+                    decoration: const BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                    ),
+                    child: Text(
+                      product.name,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF333333),
                       ),
-                      child: Text(
-                        product.name,
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF333333),
+                    ),
+                  ),
+                  // Close button
+                  Positioned(
+                    right: 8,
+                    top: 8,
+                    child: InkWell(
+                      onTap: () => Navigator.pop(context),
+                      child: Container(
+                        padding: const EdgeInsets.all(4),
+                        decoration: const BoxDecoration(
+                          color: Color(0xFF8B4513),
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(
+                          Icons.close,
+                          color: Colors.white,
+                          size: 20,
                         ),
                       ),
                     ),
-                    // Close button
-                    Positioned(
-                      right: 8,
-                      top: 8,
-                      child: InkWell(
-                        onTap: () => Navigator.pop(context),
-                        child: Container(
-                          padding: const EdgeInsets.all(4),
-                          decoration: const BoxDecoration(
-                            color: Color(0xFF8B4513),
-                            shape: BoxShape.circle,
-                          ),
-                          child: const Icon(
-                            Icons.close,
-                            color: Colors.white,
-                            size: 20,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                // Product Image
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(15),
-                    child: SizedBox(
-                      width: double.infinity,
-                      height: 240, // Increased height
-                      child: product.imageUrl.isNotEmpty
+                  ),
+                ],
+              ),
+              // Product Image
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(15),
+                  child: AspectRatio(
+                    aspectRatio: 1.0, // Ensures 1:1 aspect ratio
+                    child: product.imageUrl.isNotEmpty
                         ? Image.network(
                             product.imageUrl,
                             fit: BoxFit.cover,
                           )
                         : const Icon(Icons.image_not_supported, size: 100),
+                  ),
+                ),
+              ),
+              // Product Details
+              Padding(
+                padding: const EdgeInsets.fromLTRB(24, 16, 24, 20),
+                child: Column(
+                  children: [
+                    // Price
+                    Text(
+                      "${product.price} IDR",
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF1B4332),
+                      ),
                     ),
-                  ),
+                    const SizedBox(height: 12),
+                    // Details with smaller text and icons
+                    _buildDetailRow(
+                      Icons.restaurant,
+                      'Restaurant',
+                      product.restaurant,
+                    ),
+                    const SizedBox(height: 8),
+                    _buildDetailRow(
+                      Icons.category,
+                      'Categories',
+                      product.category,
+                    ),
+                    const SizedBox(height: 8),
+                    _buildDetailRow(
+                      Icons.location_on,
+                      'Location',
+                      product.location.toUpperCase(),
+                    ),
+                    const SizedBox(height: 8),
+                    _buildDetailRow(
+                      Icons.phone,
+                      'Contact',
+                      product.contact,
+                    ),
+                  ],
                 ),
-                // Product Details
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(24, 16, 24, 20),
-                  child: Column(
-                    children: [
-                      // Price
-                      Text(
-                        "${product.price} IDR",
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF1B4332),
-                        ),
-                      ),
-                      const SizedBox(height: 12),
-                      // Details with smaller text and icons
-                      _buildDetailRow(
-                        Icons.restaurant,
-                        'Restaurant',
-                        product.restaurant,
-                      ),
-                      const SizedBox(height: 8),
-                      _buildDetailRow(
-                        Icons.category,
-                        'Categories',
-                        product.category,
-                      ),
-                      const SizedBox(height: 8),
-                      _buildDetailRow(
-                        Icons.location_on,
-                        'Location',
-                        product.location.toUpperCase(),
-                      ),
-                      const SizedBox(height: 8),
-                      _buildDetailRow(
-                        Icons.phone,
-                        'Contact',
-                        product.contact,
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
-        );
-      },
-    );
-  }
+        ),
+      );
+    },
+  );
+}
+
 
   Widget _buildDetailRow(IconData icon, String label, String value) {
     return Row(
@@ -251,7 +251,7 @@ class _MenuPageState extends State<MenuPage> {
                     gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
                       crossAxisSpacing: 16,
-                      mainAxisSpacing: 16,
+                      mainAxisSpacing: 20,
                       childAspectRatio: 0.8,
                     ),
                     itemCount: products.length,
@@ -268,21 +268,23 @@ class _MenuPageState extends State<MenuPage> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               // Product Image inside a rounded rectangle
-                              Container(
-                                width: double.infinity,
-                                height: 180.0, // Adjust the height as per your design
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(20),
-                                  image: product.imageUrl.isNotEmpty
-                                      ? DecorationImage(
-                                          image: NetworkImage(product.imageUrl),
-                                          fit: BoxFit.cover,
-                                        )
+                              // Product Image with 1:1 aspect ratio
+                              AspectRatio(
+                                aspectRatio: 1.0, // Set the aspect ratio to 1:1
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20),
+                                    image: product.imageUrl.isNotEmpty
+                                        ? DecorationImage(
+                                            image: NetworkImage(product.imageUrl),
+                                            fit: BoxFit.cover,
+                                          )
+                                        : null,
+                                  ),
+                                  child: product.imageUrl.isEmpty
+                                      ? const Icon(Icons.image_not_supported, size: 50, color: Colors.white)
                                       : null,
                                 ),
-                                child: product.imageUrl.isEmpty
-                                    ? const Icon(Icons.image_not_supported, size: 50, color: Colors.white)
-                                    : null,
                               ),
                               // Product Info centered with white text
                               Padding(
