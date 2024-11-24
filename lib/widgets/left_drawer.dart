@@ -13,7 +13,7 @@ class LeftDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     final request = context.watch<CookieRequest>();
     final bool isLoggedIn = request.loggedIn; // Cek apakah user sudah login
-    final String? role = request.jsonData?['role']; // Ambil role jika sudah login
+    final String? role = request.jsonData['role']; // Ambil role jika sudah login
 
     return Drawer(
       child: ListView(
@@ -81,7 +81,7 @@ class LeftDrawer extends StatelessWidget {
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => MenuAdminPage(),
+                    builder: (context) => const MenuAdminPage(),
                   ),
                 );
               },
@@ -95,7 +95,7 @@ class LeftDrawer extends StatelessWidget {
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => MenuCustomerPage(),
+                    builder: (context) => const MenuCustomerPage(),
                   ),
                 );
               },

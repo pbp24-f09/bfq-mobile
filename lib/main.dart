@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSwatch(
             primarySwatch:const MaterialColor(
               0xFF2A3A30,
-              const {
+              {
                 50: Color(0xFFE4E6E5),
                 100: Color(0xFFBCC0BF),
                 200: Color(0xFF919793),
@@ -42,13 +42,11 @@ class MyApp extends StatelessWidget {
           ).copyWith(
             primary: const Color(0xFF2A3A30), // Hijau tua
             secondary: const Color(0xFFB48125), // Kuning coklat
-            surface: const Color(0xFF254832), // Hijau sedang
-            background: const Color(0xFF325D41), // Hijau terang
+            surface: const Color(0xFF254832), // Hijau terang
             error: const Color(0xFF994E12), // Coklat gelap
             onPrimary: Colors.white, // Teks pada elemen primer
             onSecondary: Colors.white, // Teks pada elemen sekunder
-            onSurface: Colors.white, // Teks pada elemen permukaan
-            onBackground: Colors.white, // Teks pada latar belakang
+            onSurface: Colors.white, // Teks pada latar belakang
           ),
         ),
         home: const MenuPage(),
