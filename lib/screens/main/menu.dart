@@ -209,7 +209,7 @@ class _MenuPageState extends State<MenuPage> {
                   ),
                   SizedBox(height: 4),
                   Text(
-                    'Discover our delicious menu',
+                    'Discover Authentic Bandung Foods',
                     style: TextStyle(
                       fontSize: 14,
                       color: Colors.white70,
@@ -261,61 +261,61 @@ class _MenuPageState extends State<MenuPage> {
                         onTap: () => _showProductDetails(context, product),
                         child: Container(
                           decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(20),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.1),
-                                blurRadius: 8,
-                                offset: const Offset(0, 4),
-                              ),
-                            ],
+                            color: Colors.transparent, // Transparent background
+                            borderRadius: BorderRadius.circular(20), // Keep rounded corners
                           ),
                           child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              // Product Image
-                              Expanded(
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: const BorderRadius.vertical(
-                                      top: Radius.circular(20),
-                                    ),
-                                    image: product.imageUrl.isNotEmpty
+                              // Product Image inside a rounded rectangle
+                              Container(
+                                width: double.infinity,
+                                height: 180.0, // Adjust the height as per your design
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20),
+                                  image: product.imageUrl.isNotEmpty
                                       ? DecorationImage(
                                           image: NetworkImage(product.imageUrl),
                                           fit: BoxFit.cover,
                                         )
                                       : null,
-                                  ),
-                                  child: product.imageUrl.isEmpty
-                                    ? const Icon(Icons.image_not_supported, size: 50)
-                                    : null,
                                 ),
+                                child: product.imageUrl.isEmpty
+                                    ? const Icon(Icons.image_not_supported, size: 50, color: Colors.white)
+                                    : null,
                               ),
-                              // Product Info
+                              // Product Info centered with white text
                               Padding(
                                 padding: const EdgeInsets.all(10.0),
                                 child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
                                       product.name,
                                       style: const TextStyle(
-                                        color: Colors.black,
+                                        color: Colors.white,
                                         fontWeight: FontWeight.bold,
                                         fontSize: 14.0,
                                       ),
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
+                                      textAlign: TextAlign.center, // Center the name
                                     ),
                                     const SizedBox(height: 2),
-                                    Text(
-                                      'Rp ${product.price}',
-                                      style: const TextStyle(
-                                        color: Colors.green,
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 12.0,
+                                    // White rounded rectangle under the price
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 8),
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                      child: Text(
+                                        'Rp ${product.price}',
+                                        style: const TextStyle(
+                                          color: Colors.black, // Change the price color to black
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 12.0,
+                                        ),
+                                        textAlign: TextAlign.center, // Center the price
                                       ),
                                     ),
                                   ],
