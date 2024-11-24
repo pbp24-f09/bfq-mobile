@@ -23,7 +23,8 @@ Kelompok kami memilih kota Bandung sebagai fokus karena Bandung dikenal sebagai 
 1. **Main App (Home Page)** - Daniel
    - **Left Drawer (di semua page)**: Widget Left Drawer untuk Admin dan Customer berisi menu Home, Categories (dropdown), Forum, Hello [nama user] (link ke edit user profile), dan Logout. Lalu, Left Drawer untuk Guest (landing page) berisi menu Home, Login, dan Register.
    - **Homepage as Admin**: Bisa menambahkan, mengedit, dan menghapus produk.
-   - **Homepage as Customer**: Menampilkan produk dalam pop-up detail.
+   - **Homepage as Customer**: Display produk dan pop-up modal untuk detail produk.
+   - **Homepage as Guest**: Display produk dan pop-up modal untuk detail produk.
    - **Carousel**: Foto-foto Bandung dengan overview singkat.
    - **Product Display**: Admin dapat menambah, mengedit, dan menghapus produk. Customer hanya melihat detail produk.
    - **Landing Page**: Landing page berisi fitur-fitur yang hampir sama dengan home page, akan tetapi navbar hanya berisi menu Home dan Login. Dalam landing page ini tetap menampilkan produk-produk.
