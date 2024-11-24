@@ -68,4 +68,4 @@ Kelompok kami memilih kota Bandung sebagai fokus karena Bandung dikenal sebagai 
    - Bisa membaca artikel kuliner serta menulis dan mengelola artikel pribadi mereka.
 
 3. **Guest**:
-   - Pengguna yang belum terdaftar hanya dapat melihat produk dan artikel, tetapi tidak dapat berinteraksi dengan forum atau menulis artikel.
+   - Pengguna yang belum terdaftar hanya dapat melihat produk, tidak dapat berinteraksi dengan forum atau menulis artikel.
