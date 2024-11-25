@@ -191,8 +191,8 @@ class _RegisterPageState extends State<RegisterPage> {
                             "http://127.0.0.1:8000/register-flutter/",
                             jsonEncode({
                               "username": _usernameController.text,
-                              "password1": _passwordController.text,
-                              "password2": _confirmPasswordController.text,
+                              "password": _passwordController.text,
+                              "confirm_password": _confirmPasswordController.text,
                               "full_name": _fullNameController.text,
                               "email": _emailController.text,
                               "age": _ageController.text,
