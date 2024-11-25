@@ -21,12 +21,16 @@ Kelompok kami memilih kota Bandung sebagai fokus karena Bandung dikenal sebagai 
 
 ## Daftar Modul yang Akan Diimplementasikan:
 1. **Main App (Home Page)** - Daniel
-   - **Left Drawer (di semua page)**: Widget Left Drawer untuk Admin dan Customer berisi menu Home, Categories (dropdown), Forum, Hello [nama user] (link ke edit user profile), dan Logout. Lalu, Left Drawer untuk Guest (landing page) berisi menu Home, Login, dan Register.
-   - **Homepage as Admin**: Bisa menambahkan, mengedit, dan menghapus produk.
-   - **Homepage as Customer**: Menampilkan produk dalam pop-up detail.
-   - **Carousel**: Foto-foto Bandung dengan overview singkat.
-   - **Product Display**: Admin dapat menambah, mengedit, dan menghapus produk. Customer hanya melihat detail produk.
-   - **Landing Page**: Landing page berisi fitur-fitur yang hampir sama dengan home page, akan tetapi navbar hanya berisi menu Home dan Login. Dalam landing page ini tetap menampilkan produk-produk.
+   - **Left Drawer (di semua page)**:
+        - Admin: Greeting, Home, Categories, Forum, Blog, Logout.
+        - Customer: Greeting, Home, Categories. Forum. Blog, Logout
+        - Guest: Home, Login, Register.
+   - **Homepage**:
+        - Admin: Display, add, edit, dan delete product + Akses categories, forum, dan blog
+        - Customer: Product display + akses categories, forum, dan blog
+        - Guest: Product display
+   - **Carousel**: Slider dekoratif Bandung Food Quest.
+   - **Product Display**: Fetch database model product antara Django dan Flutter serta mengimplementasi pop-up modal untuk menampilkan product details.
 
 2. **Categories** - Abyasa
    - **Search Bar**: Search produk menggunakan keyword nama produk.
@@ -64,4 +68,4 @@ Kelompok kami memilih kota Bandung sebagai fokus karena Bandung dikenal sebagai 
    - Bisa membaca artikel kuliner serta menulis dan mengelola artikel pribadi mereka.
 
 3. **Guest**:
-   - Pengguna yang belum terdaftar hanya dapat melihat produk dan artikel, tetapi tidak dapat berinteraksi dengan forum atau menulis artikel.
+   - Pengguna yang belum terdaftar hanya dapat melihat produk, tidak dapat berinteraksi dengan forum atau menulis artikel.
