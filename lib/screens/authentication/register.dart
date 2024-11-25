@@ -122,7 +122,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         labelText: 'Gender',
                         border: OutlineInputBorder(),
                       ),
-                      items: [
+                      items: const [
                         DropdownMenuItem(value: 'MALE', child: Text('Male')),
                         DropdownMenuItem(value: 'FEMALE', child: Text('Female')),
                       ],
