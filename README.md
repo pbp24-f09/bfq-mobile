@@ -76,8 +76,7 @@ Kelompok kami memilih kota Bandung sebagai fokus karena Bandung dikenal sebagai 
 - Selanjutnya, kami mengidentifikasi format data yang digunakan, yakni JSON, dan mencatat endpoint yang disediakan oleh web service.
 
 2. **Konfigurasi dan Koneksi ke Web Service**
-- Endpoint web service dikonfigurasi melalui file khusus untuk menyimpan URL dan parameter global.
-- Kami mengembangkan fungsi request untuk mengirimkan permintaan ke web service dan menerima responsnya.
+- Data yang dikirim ke aplikasi Flutter adalah dalam format JSON. Ketika Flutter mengirim permintaan data ke server, Django akan mengirimkan respons dalam format JSON.
 
 3. **Pengujian Proses Integrasi**
 - Sebelum menghubungkan web service ke aplikasi, kami menggunakan alat seperti Postman untuk menguji setiap endpoint dan memahami format responsnya.
