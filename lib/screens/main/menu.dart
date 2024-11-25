@@ -17,9 +17,9 @@ class _MenuPageState extends State<MenuPage> {
   int _currentCarouselIndex = 0;
   
   final List<String> carouselImages = [
-    'http://127.0.0.1:8000/static/images/slider-1.jpg',
-    'http://127.0.0.1:8000/static/images/slider-2.jpg',
-    'http://127.0.0.1:8000/static/images/slider-3.jpg',
+    'assets/images/slider-1.jpg',
+    'assets/images/slider-2.jpg',
+    'assets/images/slider-3.jpg',
   ];
 
   @override
@@ -65,7 +65,7 @@ class _MenuPageState extends State<MenuPage> {
                   ),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(15),
-                    child: Image.network(
+                    child: Image.asset(
                       imageUrl,
                       fit: BoxFit.cover,
                       errorBuilder: (context, error, stackTrace) {
