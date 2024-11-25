@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../services/api_service.dart';
 import '/models/product.dart';
+import 'package:bfq/screens/authentication/login.dart';
 
 class MenuPage extends StatefulWidget {
   const MenuPage({Key? key}) : super(key: key);
@@ -218,6 +219,33 @@ class _MenuPageState extends State<MenuPage> {
                 ],
               ),
             ),
+            
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+              child: Align(
+                alignment: Alignment.centerRight, // Align the button to the right
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => LoginPage()), // Route to LoginPage
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF1B4332), // Match theme
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12), // Rounded button
+                    ),
+                  ),
+                  child: const Text(
+                    'Login',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              ),
+            ),
+
+
             // Products Grid
             Expanded(
               child: FutureBuilder<List<Product>>(
