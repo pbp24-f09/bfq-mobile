@@ -69,3 +69,23 @@ Kelompok kami memilih kota Bandung sebagai fokus karena Bandung dikenal sebagai 
 
 3. **Guest**:
    - Pengguna yang belum terdaftar hanya dapat melihat produk, tidak dapat berinteraksi dengan forum atau menulis artikel.
+  
+## Langkah-Langkah Integrasi dengan Web Service
+1. **Identifikasi Kebutuhan dan Perancangan Aplikasi**
+- Kami memulai dengan menentukan fitur utama yang harus disediakan oleh web service, seperti mengambil data produk dan validasi pengguna.
+- Selanjutnya, kami mengidentifikasi format data yang digunakan, yakni JSON, dan mencatat endpoint yang disediakan oleh web service.
+
+2. **Konfigurasi dan Koneksi ke Web Service**
+- Endpoint web service dikonfigurasi melalui file khusus untuk menyimpan URL dan parameter global.
+- Kami mengembangkan fungsi request untuk mengirimkan permintaan ke web service dan menerima responsnya.
+
+3. **Pengujian Proses Integrasi**
+- Sebelum menghubungkan web service ke aplikasi, kami menggunakan alat seperti Postman untuk menguji setiap endpoint dan memahami format responsnya.
+- Pengujian dilakukan pada berbagai skenario, baik keberhasilan maupun kegagalan, untuk memastikan sistem siap digunakan.
+
+4. **Pengembangan User Interface**
+- Setelah integrasi teknis selesai, kami membuat antarmuka pengguna (UI/UX) untuk mengolah dan menampilkan data yang diperoleh dari web service secara intuitif dan interaktif.
+
+5. **Deployment dan Pemantauan**
+- Kami memastikan koneksi ke web service tetap stabil saat aplikasi dijalankan.
+- Performa web service, termasuk waktu respons dan error log, dipantau secara berkala untuk menjaga kelancaran operasional aplikasi.
