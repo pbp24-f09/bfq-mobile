@@ -20,8 +20,7 @@ class _RegisterPageState extends State<RegisterPage> {
   final _ageController = TextEditingController();
   final _phoneNumberController = TextEditingController();
   String? _gender;
-  String? _role;
-
+  
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -155,29 +154,6 @@ class _RegisterPageState extends State<RegisterPage> {
                       },
                     ),
                     const SizedBox(height: 12.0),
-                    DropdownButtonFormField<String>(
-                      value: _role,
-                      decoration: const InputDecoration(
-                        labelText: 'Role',
-                        border: OutlineInputBorder(),
-                      ),
-                      items: const [
-                        DropdownMenuItem(value: 'admin', child: Text('Admin')),
-                        DropdownMenuItem(value: 'customer', child: Text('Customer')),
-                      ],
-                      onChanged: (value) {
-                        setState(() {
-                          _role = value;
-                        });
-                      },
-                      validator: (value) {
-                        if (value == null) {
-                          return 'Please select your role';
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: 12.0),
                     TextFormField(
                       controller: _passwordController,
                       decoration: const InputDecoration(
@@ -215,14 +191,13 @@ class _RegisterPageState extends State<RegisterPage> {
                             "http://127.0.0.1:8000/register-flutter/",
                             jsonEncode({
                               "username": _usernameController.text,
-                              "password1": _passwordController.text,
-                              "password2": _confirmPasswordController.text,
+                              "password": _passwordController.text,
+                              "confirm_password": _confirmPasswordController.text,
                               "full_name": _fullNameController.text,
                               "email": _emailController.text,
                               "age": _ageController.text,
                               "gender": _gender,
                               "phone_number": _phoneNumberController.text,
-                              "role": _role,
                             }),
                           );
 

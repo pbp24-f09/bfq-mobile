@@ -45,8 +45,10 @@ class MyApp extends StatelessWidget {
             surface: const Color(0xFF254832), // Hijau terang
             error: const Color(0xFF994E12), // Coklat gelap
             onPrimary: Colors.white, // Teks pada elemen primer
-            onSecondary: Colors.white, // Teks pada elemen sekunder
-            onSurface: Colors.white, // Teks pada latar belakang
+            onSecondary: Colors.black, // Teks pada elemen sekunder
+            onSurface: Colors.black, // Teks pada elemen permukaan
+            onBackground: Colors.white, // Teks pada latar belakang
+
           ),
         ),
         home: const MenuPage(),
