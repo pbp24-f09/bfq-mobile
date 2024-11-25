@@ -272,16 +272,16 @@ class _MenuPageState extends State<MenuPage> {
     );
   }
 
-  // Rest of the code remains the same
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF1B4332),
       body: SafeArea(
-        child: SingleChildScrollView( // Add SingleChildScrollView here
+        child: SingleChildScrollView( 
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              
               // Welcome Text
               Padding(
                 padding: const EdgeInsets.all(20.0),
