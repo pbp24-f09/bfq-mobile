@@ -89,3 +89,8 @@ Kelompok kami memilih kota Bandung sebagai fokus karena Bandung dikenal sebagai 
 5. **Deployment dan Pemantauan**
 - Kami memastikan koneksi ke web service tetap stabil saat aplikasi dijalankan.
 - Performa web service, termasuk waktu respons dan error log, dipantau secara berkala untuk menjaga kelancaran operasional aplikasi.
+
+---
+
+## Progress Tracker
+https://docs.google.com/spreadsheets/d/1jme9nQszFj6PM0KthMlKFVwGmmGhkD531HXKvJ9v3Ms/edit?usp=sharing
