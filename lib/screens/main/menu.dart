@@ -371,7 +371,7 @@ class _MenuPageState extends State<MenuPage> {
                     gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
                       crossAxisSpacing: 16,
-                      mainAxisSpacing: 20,
+                      mainAxisSpacing: 10,
                       childAspectRatio: 0.8,
                     ),
                     itemCount: products.length,
@@ -387,21 +387,25 @@ class _MenuPageState extends State<MenuPage> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              AspectRatio(
-                                aspectRatio: 1.0,
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20),
-                                    image: product.imageUrl.isNotEmpty
-                                        ? DecorationImage(
-                                            image: NetworkImage(product.imageUrl),
-                                            fit: BoxFit.cover,
-                                          )
+                              SizedBox(
+                                width: 220, // Set desired width
+                                height: 220, // Set desired height
+                                child: AspectRatio(
+                                  aspectRatio: 1.0,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(20),
+                                      image: product.imageUrl.isNotEmpty
+                                          ? DecorationImage(
+                                              image: NetworkImage(product.imageUrl),
+                                              fit: BoxFit.cover,
+                                            )
+                                          : null,
+                                    ),
+                                    child: product.imageUrl.isEmpty
+                                        ? const Icon(Icons.image_not_supported, size: 50, color: Colors.white)
                                         : null,
                                   ),
-                                  child: product.imageUrl.isEmpty
-                                      ? const Icon(Icons.image_not_supported, size: 50, color: Colors.white)
-                                      : null,
                                 ),
                               ),
                               Padding(
