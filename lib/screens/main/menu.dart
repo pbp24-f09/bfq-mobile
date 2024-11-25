@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../../services/api_service.dart';
 import '/models/product.dart';
 import 'package:bfq/screens/authentication/login.dart';
+import 'package:carousel_slider/carousel_slider.dart';
+
 
 class MenuPage extends StatefulWidget {
   const MenuPage({Key? key}) : super(key: key);
@@ -12,11 +14,96 @@ class MenuPage extends StatefulWidget {
 
 class _MenuPageState extends State<MenuPage> {
   late Future<List<Product>> futureProducts;
+  int _currentCarouselIndex = 0;
+  
+  final List<String> carouselImages = [
+    'http://127.0.0.1:8000/static/images/slider-1.jpg',
+    'http://127.0.0.1:8000/static/images/slider-2.jpg',
+    'http://127.0.0.1:8000/static/images/slider-3.jpg',
+  ];
 
   @override
   void initState() {
     super.initState();
     futureProducts = ApiService.fetchProducts();
+  }
+
+  Widget _buildCarousel() {
+    return Column(
+      children: [
+        CarouselSlider(
+          options: CarouselOptions(
+            height: 200.0,
+            autoPlay: true,
+            autoPlayInterval: const Duration(seconds: 3),
+            autoPlayAnimationDuration: const Duration(milliseconds: 800),
+            autoPlayCurve: Curves.fastOutSlowIn,
+            enlargeCenterPage: true,
+            enlargeFactor: 0.2,
+            onPageChanged: (index, reason) {
+              setState(() {
+                _currentCarouselIndex = index;
+              });
+            },
+          ),
+          items: carouselImages.map((imageUrl) {
+            return Builder(
+              builder: (BuildContext context) {
+                return Container(
+                  width: MediaQuery.of(context).size.width,
+                  margin: const EdgeInsets.symmetric(horizontal: 5.0),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.2),
+                        spreadRadius: 1,
+                        blurRadius: 5,
+                        offset: const Offset(0, 3),
+                      ),
+                    ],
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(15),
+                    child: Image.network(
+                      imageUrl,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Container(
+                          color: Colors.grey[300],
+                          child: const Icon(
+                            Icons.error_outline,
+                            color: Colors.red,
+                            size: 40,
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                );
+              },
+            );
+          }).toList(),
+        ),
+        const SizedBox(height: 10),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: carouselImages.asMap().entries.map((entry) {
+            return Container(
+              width: 8.0,
+              height: 8.0,
+              margin: const EdgeInsets.symmetric(horizontal: 4.0),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.white.withOpacity(
+                  _currentCarouselIndex == entry.key ? 0.9 : 0.4,
+                ),
+              ),
+            );
+          }).toList(),
+        ),
+      ],
+    );
   }
 
   void _showProductDetails(BuildContext context, Product product) {
@@ -191,64 +278,67 @@ class _MenuPageState extends State<MenuPage> {
     return Scaffold(
       backgroundColor: const Color(0xFF1B4332),
       body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Welcome Text
-            Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
-                  Text(
-                    'Welcome to BFQ',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
+        child: SingleChildScrollView( // Add SingleChildScrollView here
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Welcome Text
+              Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: const [
+                    Text(
+                      'Welcome to BFQ',
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 4),
-                  Text(
-                    'Discover Authentic Bandung Foods',
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.white70,
+                    SizedBox(height: 4),
+                    Text(
+                      'Discover Authentic Bandung Foods',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.white70,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
-              child: Align(
-                alignment: Alignment.centerRight, // Align the button to the right
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => LoginPage()), // Route to LoginPage
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF1B4332), // Match theme
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12), // Rounded button
+
+              // Carousel Slider
+              _buildCarousel(),
+              
+              // Login Button
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+                child: Align(
+                  alignment: Alignment.centerRight,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => LoginPage()),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF1B4332),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                     ),
-                  ),
-                  child: const Text(
-                    'Login',
-                    style: TextStyle(color: Colors.white),
+                    child: const Text(
+                      'Login',
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
                 ),
               ),
-            ),
 
-
-            // Products Grid
-            Expanded(
-              child: FutureBuilder<List<Product>>(
+              // Products Grid
+              FutureBuilder<List<Product>>(
                 future: futureProducts,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
@@ -275,6 +365,8 @@ class _MenuPageState extends State<MenuPage> {
 
                   final products = snapshot.data!;
                   return GridView.builder(
+                    shrinkWrap: true, // Add this
+                    physics: const NeverScrollableScrollPhysics(), // Add this
                     padding: const EdgeInsets.all(16.0),
                     gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
@@ -289,16 +381,14 @@ class _MenuPageState extends State<MenuPage> {
                         onTap: () => _showProductDetails(context, product),
                         child: Container(
                           decoration: BoxDecoration(
-                            color: Colors.transparent, // Transparent background
-                            borderRadius: BorderRadius.circular(20), // Keep rounded corners
+                            color: Colors.transparent,
+                            borderRadius: BorderRadius.circular(20),
                           ),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              // Product Image inside a rounded rectangle
-                              // Product Image with 1:1 aspect ratio
                               AspectRatio(
-                                aspectRatio: 1.0, // Set the aspect ratio to 1:1
+                                aspectRatio: 1.0,
                                 child: Container(
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(20),
@@ -314,7 +404,6 @@ class _MenuPageState extends State<MenuPage> {
                                       : null,
                                 ),
                               ),
-                              // Product Info centered with white text
                               Padding(
                                 padding: const EdgeInsets.all(10.0),
                                 child: Column(
@@ -328,10 +417,9 @@ class _MenuPageState extends State<MenuPage> {
                                       ),
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
-                                      textAlign: TextAlign.center, // Center the name
+                                      textAlign: TextAlign.center,
                                     ),
                                     const SizedBox(height: 2),
-                                    // White rounded rectangle under the price
                                     Container(
                                       padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 8),
                                       decoration: BoxDecoration(
@@ -341,11 +429,11 @@ class _MenuPageState extends State<MenuPage> {
                                       child: Text(
                                         'Rp ${product.price}',
                                         style: const TextStyle(
-                                          color: Colors.black, // Change the price color to black
+                                          color: Colors.black,
                                           fontWeight: FontWeight.w600,
                                           fontSize: 12.0,
                                         ),
-                                        textAlign: TextAlign.center, // Center the price
+                                        textAlign: TextAlign.center,
                                       ),
                                     ),
                                   ],
@@ -359,8 +447,8 @@ class _MenuPageState extends State<MenuPage> {
                   );
                 },
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
