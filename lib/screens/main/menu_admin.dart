@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'menu.dart';
 import 'package:bfq/widgets/left_drawer.dart';
+import 'product_form.dart';
 
 class MenuAdminPage extends StatelessWidget {
   const MenuAdminPage({super.key});
@@ -33,11 +34,24 @@ class MenuAdminPage extends StatelessWidget {
           ),
         ],
       ),
-
       drawer: const LeftDrawer(),
-
-      body: const Center(
-        child: Text('Welcome, Admin!'),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text('Welcome, Admin!'),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const ProductFormPage()),
+                );
+              },
+              child: const Text('Create Product'),
+            ),
+          ],
+        ),
       ),
     );
   }
