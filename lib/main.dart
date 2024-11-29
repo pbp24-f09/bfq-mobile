@@ -43,12 +43,11 @@ class MyApp extends StatelessWidget {
             primary: const Color(0xFF2A3A30), // Hijau tua
             secondary: const Color(0xFFB48125), // Kuning coklat
             surface: const Color(0xFF254832), // Hijau terang
-            error: const Color(0xFF994E12), // Coklat gelap
+            error: const Color.fromARGB(255, 131, 87, 51), // Coklat gelap
             onPrimary: Colors.white, // Teks pada elemen primer
             onSecondary: Colors.black, // Teks pada elemen sekunder
-            onSurface: Colors.black, // Teks pada elemen permukaan
-            onBackground: Colors.white, // Teks pada latar belakang
-
+            onSurface: Colors.black,
+            onBackground: const Color.fromARGB(193, 255, 255, 255), // Teks pada elemen permukaan
           ),
         ),
         home: SplashScreen(),
