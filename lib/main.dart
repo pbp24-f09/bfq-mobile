@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:bfq/screens/main/splash_screen.dart';
-import 'package:bfq/screens/authentication/login.dart';
+import 'package:bfq/main/screens/splash_screen.dart';
+import 'package:bfq/authentication/screens/login.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
 

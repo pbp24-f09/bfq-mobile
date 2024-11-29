@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
-import 'package:bfq/screens/authentication/register.dart';
-import 'package:bfq/screens/main/menu_customer.dart';
-import 'package:bfq/screens/main/menu_admin.dart';
+import 'package:bfq/authentication/screens/register.dart';
+import 'package:bfq/main/screens/menu_customer.dart';
+import 'package:bfq/main/screens/menu_admin.dart';
 
 void main() {
   runApp(const LoginApp());

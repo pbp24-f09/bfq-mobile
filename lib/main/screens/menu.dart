@@ -1,25 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:pbp_django_auth/pbp_django_auth.dart';
-import 'package:bfq/widgets/left_drawer.dart';
-import 'menu.dart';
-import 'package:bfq/widgets/left_drawer.dart';
-import 'product_form.dart';
-import '../../services/api_service.dart'; 
+import '../services/api_service.dart';
+import '../models/product.dart';
+import 'package:bfq/authentication/screens/login.dart';
+import 'package:bfq/authentication/screens/register.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import '/models/product.dart';
 
-class MenuAdminPage extends StatefulWidget {
-  const MenuAdminPage({super.key});
+
+class MenuPage extends StatefulWidget {
+  const MenuPage({Key? key}) : super(key: key);
 
   @override
-  State<MenuAdminPage> createState() => _MenuAdminPageState();
+  State<MenuPage> createState() => _MenuPageState();
 }
 
-class _MenuAdminPageState extends State<MenuAdminPage> {
+class _MenuPageState extends State<MenuPage> {
   late Future<List<Product>> futureProducts;
   int _currentCarouselIndex = 0;
-
+  
   final List<String> carouselImages = [
     'assets/images/slider-1.jpg',
     'assets/images/slider-2.jpg',
@@ -277,175 +274,214 @@ class _MenuAdminPageState extends State<MenuAdminPage> {
   }
 
   @override
-Widget build(BuildContext context) {
-  final request = context.watch<CookieRequest>();
-
-  return Scaffold(
-    appBar: AppBar(
-      title: const Text('Admin Dashboard'),
-      actions: [
-        IconButton(
-          icon: const Icon(Icons.logout),
-          onPressed: () async {
-            final response = await request.logout("http://127.0.0.1:8000/logout-flutter/");
-            String message = response["message"];
-            if (context.mounted) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text("$message Logout berhasil.")),
-              );
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => const MenuPage()),
-              );
-            }
-          },
-        ),
-      ],
-    ),
-    drawer: const LeftDrawer(),
-    body: SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          const SizedBox(height: 20),
-          // Carousel Slider Section
-          _buildCarousel(),
-          const SizedBox(height: 20),
-          // Create Product Button
-          ElevatedButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const ProductFormPage()),
-              );
-            },
-            child: const Text('Create Product'),
-          ),
-          const SizedBox(height: 20),
-          
-          // Product Display Section
-                      // Products Grid
-            FutureBuilder<List<Product>>(
-              future: futureProducts,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-
-                if (snapshot.hasError) {
-                  return Center(
-                    child: Text(
-                      'Error: ${snapshot.error}',
-                      style: const TextStyle(color: Colors.white),
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: const Color(0xFF1B4332),
+      body: SafeArea(
+        child: SingleChildScrollView( 
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              
+              // Welcome Text
+              Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: const [
+                    Text(
+                      'Welcome to BFQ',
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
                     ),
-                  );
-                }
-
-                if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return const Center(
-                    child: Text(
-                      'No products available.',
-                      style: TextStyle(color: Colors.white),
+                    SizedBox(height: 4),
+                    Text(
+                      'Discover Authentic Bandung Foods',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.white70,
+                      ),
                     ),
-                  );
-                }
+                  ],
+                ),
+              ),
 
-                final products = snapshot.data!;
-                return GridView.builder(
-                  shrinkWrap: true, // Add this
-                  physics: const NeverScrollableScrollPhysics(), // Add this
-                  padding: const EdgeInsets.all(16.0),
-                  gridDelegate:
-                      const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 16,
-                    mainAxisSpacing: 10,
-                    childAspectRatio: 0.8,
-                  ),
-                  itemCount: products.length,
-                  itemBuilder: (context, index) {
-                    final product = products[index];
-                    return GestureDetector(
-                      onTap: () => _showProductDetails(context, product),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.transparent,
-                          borderRadius: BorderRadius.circular(20),
+              // Carousel Slider
+              _buildCarousel(),
+              
+              // Row for Register and Login Buttons
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+                child: Align(
+                  alignment: Alignment.centerRight,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min, // Agar hanya selebar isi tombol
+                    children: [
+                      // Register Button
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => RegisterPage()),
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Theme.of(context).colorScheme.secondary,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
                         ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            SizedBox(
-                              width: 220, // Set desired width
-                              height: 220, // Set desired height
-                              child: AspectRatio(
-                                aspectRatio: 1.0,
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20),
-                                    image: product.imageUrl.isNotEmpty
-                                        ? DecorationImage(
-                                            image: NetworkImage(
-                                                product.imageUrl),
-                                            fit: BoxFit.cover,
-                                          )
-                                        : null,
-                                  ),
-                                  child: product.imageUrl.isEmpty
-                                      ? const Icon(Icons.image_not_supported,
-                                          size: 50, color: Colors.white)
-                                      : null,
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(10.0),
-                              child: Column(
-                                children: [
-                                  Text(
-                                    product.name,
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 14.0,
-                                    ),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  const SizedBox(height: 2),
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 2, horizontal: 8),
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                    child: Text(
-                                      'Rp ${product.price}',
-                                      style: const TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 12.0,
-                                      ),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
+                        child: const Text(
+                          'Register',
+                          style: TextStyle(color: Colors.white),
                         ),
                       ),
+                      const SizedBox(width: 10), // Jarak antar tombol
+                      // Login Button
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => LoginPage()),
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Theme.of(context).colorScheme.secondary,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        child: const Text(
+                          'Login',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+
+              // Products Grid
+              FutureBuilder<List<Product>>(
+                future: futureProducts,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+
+                  if (snapshot.hasError) {
+                    return Center(
+                      child: Text(
+                        'Error: ${snapshot.error}',
+                        style: const TextStyle(color: Colors.white),
+                      ),
                     );
-                  },
-                );
-              },
+                  }
+
+                  if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    return const Center(
+                      child: Text(
+                        'No products available.',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    );
+                  }
+
+                  final products = snapshot.data!;
+                  return GridView.builder(
+                    shrinkWrap: true, // Add this
+                    physics: const NeverScrollableScrollPhysics(), // Add this
+                    padding: const EdgeInsets.all(16.0),
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 16,
+                      mainAxisSpacing: 10,
+                      childAspectRatio: 0.8,
+                    ),
+                    itemCount: products.length,
+                    itemBuilder: (context, index) {
+                      final product = products[index];
+                      return GestureDetector(
+                        onTap: () => _showProductDetails(context, product),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.transparent,
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              SizedBox(
+                                width: 220, // Set desired width
+                                height: 220, // Set desired height
+                                child: AspectRatio(
+                                  aspectRatio: 1.0,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(20),
+                                      image: product.imageUrl.isNotEmpty
+                                          ? DecorationImage(
+                                              image: NetworkImage(product.imageUrl),
+                                              fit: BoxFit.cover,
+                                            )
+                                          : null,
+                                    ),
+                                    child: product.imageUrl.isEmpty
+                                        ? const Icon(Icons.image_not_supported, size: 50, color: Colors.white)
+                                        : null,
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(10.0),
+                                child: Column(
+                                  children: [
+                                    Text(
+                                      product.name,
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 14.0,
+                                      ),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    const SizedBox(height: 2),
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 8),
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                      child: Text(
+                                        'Rp ${product.price}',
+                                        style: const TextStyle(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 12.0,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                },
+              ),
+            ],
           ),
-          const SizedBox(height: 20),
-        ],
+        ),
       ),
-    ),
-  );
-}
+    );
+  }
 }
