@@ -19,30 +19,29 @@ class MyApp extends StatelessWidget {
         return request;
       },
       child: MaterialApp(
-        title: 'Test',
+        title: 'BFQ',
         theme: ThemeData(
           useMaterial3: true,
-          fontFamily: 'Derovana', // Gunakan font global
           colorScheme: ColorScheme.fromSwatch(
-            primarySwatch:const MaterialColor(
-              0xFF2A3A30,
+            primarySwatch: const MaterialColor(
+              0xFF172810,
               {
-                50: Color(0xFFE4E6E5),
-                100: Color(0xFFBCC0BF),
-                200: Color(0xFF919793),
-                300: Color(0xFF666D68),
-                400: Color(0xFF454D48),
-                500: Color(0xFF2A3A30),
-                600: Color(0xFF24332B),
-                700: Color(0xFF1C2A24),
-                800: Color(0xFF15201C),
-                900: Color(0xFF0B120F),
+                50: Color(0xFFE4E9E2),
+                100: Color(0xFFBCCEBA),
+                200: Color(0xFF91B292),
+                300: Color(0xFF66966A),
+                400: Color(0xFF4A7F4D),
+                500: Color(0xFF306836),
+                600: Color(0xFF2A5E30),
+                700: Color(0xFF234E27),
+                800: Color(0xFF1C3E1F),
+                900: Color(0xFF122914),
               },
             ),
           ).copyWith(
-            primary: const Color(0xFF2A3A30), // Hijau tua
+            primary: const Color(0xFF172810), // Hijau tua
             secondary: const Color(0xFFB48125), // Kuning coklat
-            surface: const Color(0xFF254832), // Hijau terang
+            surface: const Color(0xFF102820), // Hijau terang
             error: const Color.fromARGB(255, 131, 87, 51), // Coklat gelap
             onPrimary: Colors.white, // Teks pada elemen primer
             onSecondary: Colors.black, // Teks pada elemen sekunder
@@ -50,6 +49,7 @@ class MyApp extends StatelessWidget {
             onBackground: const Color.fromARGB(193, 255, 255, 255), // Teks pada elemen permukaan
           ),
         ),
+        // Atur SplashScreen langsung sebagai `home`
         home: SplashScreen(),
       ),
     );

@@ -276,7 +276,7 @@ class _MenuPageState extends State<MenuPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF1B4332),
+      backgroundColor: Theme.of(context).colorScheme.primary,
       body: SafeArea(
         child: SingleChildScrollView( 
           child: Column(
@@ -284,11 +284,11 @@ class _MenuPageState extends State<MenuPage> {
             children: [
               
               // Welcome Text
-              Padding(
-                padding: const EdgeInsets.all(20.0),
+              const Padding(
+                padding: EdgeInsets.all(20.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
+                  children: [
                     Text(
                       'Welcome to BFQ',
                       style: TextStyle(
