@@ -2,23 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:bfq/widgets/left_drawer.dart';
-import '../../services/api_service.dart'; 
-import '/models/product.dart';
 import 'menu.dart';
-import 'package:bfq/screens/authentication/login.dart';
+import 'product_form.dart';
+import '../services/api_service.dart'; 
 import 'package:carousel_slider/carousel_slider.dart';
+import '../models/product.dart';
 
-class MenuCustomerPage extends StatefulWidget {
-  const MenuCustomerPage({super.key});
+class MenuAdminPage extends StatefulWidget {
+  const MenuAdminPage({super.key});
 
   @override
-  State<MenuCustomerPage> createState() => _MenuCustomerPageState();
+  State<MenuAdminPage> createState() => _MenuAdminPageState();
 }
 
-class _MenuCustomerPageState extends State<MenuCustomerPage> {
+class _MenuAdminPageState extends State<MenuAdminPage> {
   late Future<List<Product>> futureProducts;
   int _currentCarouselIndex = 0;
-  
+
   final List<String> carouselImages = [
     'assets/images/slider-1.jpg',
     'assets/images/slider-2.jpg',
@@ -280,69 +280,47 @@ Widget build(BuildContext context) {
   final request = context.watch<CookieRequest>();
 
   return Scaffold(
-    backgroundColor: const Color(0xFF1B4332),
-    drawer: const LeftDrawer(), // Drawer positioned on the left
+    backgroundColor: Theme.of(context).colorScheme.primary,
     appBar: AppBar(
-      backgroundColor: const Color(0xFF1B4332),
-      elevation: 0,
-      actions: [
-        IconButton(
-          icon: const Icon(Icons.logout),
-          onPressed: () async {
-            final response =
-                await request.logout("http://127.0.0.1:8000/logout-flutter/");
-            String message = response["message"];
-            if (context.mounted) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text("$message Logout berhasil.")),
-              );
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => const MenuPage()),
-              );
-            }
-          },
-        ),
-      ],
-    ),
-    body: SafeArea(
-      child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // Welcome Text
-            Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
-                  Text(
-                    'Welcome to BFQ',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                  SizedBox(height: 4),
-                  Text(
-                    'Discover Authentic Bandung Foods',
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.white70,
-                    ),
-                  ),
-                ],
-              ),
+            Image.asset(
+              'assets/images/logo.png',
+              width: 75,
+              height: 50,
             ),
-
-            // Carousel Slider
-            _buildCarousel(),
-
-            SizedBox(height: 20), // Spaces
-
-
-            // Products Grid
+          ],
+        ),
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        elevation: 6,
+        iconTheme: const IconThemeData(
+          color: Colors.white, // Warna ikon back
+        ),
+      ),
+    drawer: const LeftDrawer(),
+    body: SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          const SizedBox(height: 20),
+          // Carousel Slider Section
+          _buildCarousel(),
+          const SizedBox(height: 20),
+          // Create Product Button
+          ElevatedButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const ProductFormPage()),
+              );
+            },
+            child: const Text('Create Product'),
+          ),
+          const SizedBox(height: 20),
+          
+          // Product Display Section
+                      // Products Grid
             FutureBuilder<List<Product>>(
               future: futureProducts,
               builder: (context, snapshot) {
@@ -459,9 +437,9 @@ Widget build(BuildContext context) {
                   },
                 );
               },
-            ),
-          ],
-        ),
+          ),
+          const SizedBox(height: 20),
+        ],
       ),
     ),
   );
