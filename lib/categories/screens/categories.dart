@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:bfq/widgets/left_drawer.dart';
-
-
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:bfq/categories/models/product_cat.dart'; // Adjust the import path as necessary
@@ -212,8 +210,13 @@ class _CategoriesPageState extends State<CategoriesPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Search for Foods'),
+        title: const Text(
+          'Search for Foods',
+          style: TextStyle(color: Colors.white)
+        ),
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
+      drawer: const LeftDrawer(),
       body: FutureBuilder<List<ProductEntry>>(
         future: _productEntries,
         builder: (context, snapshot) {
@@ -240,12 +243,40 @@ class _CategoriesPageState extends State<CategoriesPage> {
                     ),
                   ),
                 ),
-                // Padding(
-                //   padding: const EdgeInsets.all(16.0),
-                //   child: Row(
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Theme.of(context).colorScheme.secondary,
+                        ),
+                        child: const Icon(
+                          Icons.display_settings_rounded,
+                          color: Colors.white,
+                        ),
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.all(8)
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
 
-                //   )
-                // )
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Theme.of(context).colorScheme.secondary,
+                        ),
+                        child: const Icon(
+                          Icons.arrow_upward_rounded,
+                          color: Colors.white,
+                        ),                      ),
+                    ]
+                  ),
+                ),
                 Expanded(
                   child: GridView.builder(
                     // shrinkWrap: true, // Add this
