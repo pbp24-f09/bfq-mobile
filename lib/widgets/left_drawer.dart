@@ -20,8 +20,8 @@ class LeftDrawer extends StatelessWidget {
     final String? profilePhoto = request.jsonData['profile_photo']; // URL foto profil
     final String? username = request.jsonData['username'];
 
-
     return Drawer(
+      backgroundColor: const Color(0xFFF3EAD8), // Warna latar Drawer
       child: Column(
         children: [
           DrawerHeader(
@@ -128,13 +128,14 @@ class LeftDrawer extends StatelessWidget {
                           String uname = response["username"];
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
-                              content:
-                                  Text("$message Goodbye, $uname!"),
+                              content: Text("$message Goodbye, $uname!"),
                             ),
                           );
                           Navigator.pushReplacement(
                             context,
-                            MaterialPageRoute(builder: (context) => const MenuPage()),
+                            MaterialPageRoute(
+                              builder: (context) => const MenuPage(),
+                            ),
                           );
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
@@ -163,14 +164,22 @@ class LeftDrawer extends StatelessWidget {
               ],
             ),
           ),
-          const Divider(),
-          Padding(
-            padding: EdgeInsets.all(16.0),
-            child: 
-            Image.asset(
-              'assets/images/logo.png',
-              width: 75,
-              height: 50,
+          Container(
+            decoration: const BoxDecoration(
+              color: Color(0xFF172810), // Warna hijau
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    'assets/images/logo.png', // Gambar logo
+                    width: 70,
+                    height: 70,
+                  ),
+                ],
+              ),
             ),
           ),
         ],

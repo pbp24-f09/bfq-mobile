@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
+import 'package:bfq/widgets/appbar.dart';
+import 'package:bfq/widgets/left_drawer.dart';
+
 
 class UserProfilePage extends StatefulWidget {
   const UserProfilePage({Key? key}) : super(key: key);
@@ -13,6 +16,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
   bool isLoading = true;
   String? errorMessage;
   Map<String, dynamic>? profileData;
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -23,7 +27,8 @@ class _UserProfilePageState extends State<UserProfilePage> {
   Future<void> _fetchUserProfile() async {
     try {
       final request = context.read<CookieRequest>();
-      final response = await request.get('http://127.0.0.1:8000/profile-flutter/');
+      final response =
+          await request.get('http://127.0.0.1:8000/profile-flutter/');
       if (response.containsKey('username') &&
           response.containsKey('full_name') &&
           response.containsKey('email')) {
@@ -48,11 +53,12 @@ class _UserProfilePageState extends State<UserProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF102820), // Warna gradasi latar belakang
-      appBar: AppBar(
-        title: const Text("User Profile"),
-        backgroundColor: const Color(0xFF172810),
-        centerTitle: true,
+      key: _scaffoldKey,
+      backgroundColor: Theme.of(context).colorScheme.primary,
+      drawer: const LeftDrawer(),
+      appBar: CustomLogoAppBar(
+        scaffoldKey: _scaffoldKey,
+        elevation: 6.0,
       ),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
@@ -66,7 +72,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
               : SingleChildScrollView(
                   child: Center(
                     child: Container(
-                      margin: const EdgeInsets.symmetric(vertical: 40),
+                      margin: const EdgeInsets.symmetric(vertical: 80),
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
                         color: const Color(0xFFF3EAD8),
@@ -83,7 +89,6 @@ class _UserProfilePageState extends State<UserProfilePage> {
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // Kolom kiri: Foto profil dan tombol
                           Expanded(
                             flex: 1,
                             child: Column(
@@ -92,61 +97,73 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                   radius: 60,
                                   backgroundImage: profileData!['profile_photo'] != null
                                       ? NetworkImage(profileData!['profile_photo'])
-                                      : const AssetImage('assets/images/default-profile.jpg')
-                                          as ImageProvider,
+                                      : const AssetImage(
+                                          'assets/images/default-profile.jpg',
+                                        ) as ImageProvider,
+                                  onBackgroundImageError: (_, __) => const Icon(Icons.error),
                                 ),
                                 const SizedBox(height: 20),
                                 ElevatedButton(
                                   onPressed: () {
-                                    // Aksi untuk Edit Foto
-                                  },
+
+                                  }, // Placeholder for edit photo logic
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: const Color(0xFFB48125),
                                     foregroundColor: Colors.white,
-                                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 24, vertical: 12),
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(10),
                                     ),
                                   ),
                                   child: const Text("Edit Photo"),
                                 ),
-                                const SizedBox(height: 10),
+                                const SizedBox(height: 20),
                                 ElevatedButton(
                                   onPressed: () {
-                                    // Aksi untuk Delete Account
+                                    // Logic to delete the account can be implemented here
                                   },
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor : Colors.red,
-                                    foregroundColor : Colors.white,
-                                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                                    backgroundColor: const Color(0xFFB48125),
+                                    foregroundColor: Colors.white,
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 24, vertical: 12),
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(10),
                                     ),
                                   ),
-                                  child: const Text("Delete Account"),
+                                  child: const Text("Delete Acc"),
                                 ),
                               ],
                             ),
                           ),
                           const SizedBox(width: 20),
-                          // Kolom kanan: Informasi Profil
                           Expanded(
                             flex: 2,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  profileData!['is_admin'] == true
-                                      ? "Admin's Profile"
-                                      : "${profileData!['full_name']}'s Profile",
-                                  style: const TextStyle(
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.bold,
-                                    color: Color(0xFFB48125),
-                                  ),
+                                Row(
+                                  children: [
+                                    Text(
+                                      profileData!['full_name'] + "'s Profile",
+                                      style: const TextStyle(
+                                        fontSize: 24,
+                                        fontWeight: FontWeight.bold,
+                                        color: Color(0xFFB48125),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    IconButton(
+                                      onPressed: () {
+                                        // Placeholder: Logic for editing profile can be added here
+                                      },
+                                      icon: const Icon(Icons.edit),
+                                      color: const Color(0xFFB48125),
+                                    ),
+                                  ],
                                 ),
                                 const SizedBox(height: 20),
-                                // Informasi Profil
                                 _buildProfileItem("Full Name", profileData!['full_name']),
                                 _buildProfileItem("Email", profileData!['email']),
                                 _buildProfileItem(

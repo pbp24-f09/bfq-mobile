@@ -30,6 +30,9 @@ class AuthLayout extends StatelessWidget {
         ),
         backgroundColor: Theme.of(context).colorScheme.primary,
         elevation: 6,
+        iconTheme: const IconThemeData(
+          color: Colors.white, // Warna ikon back
+        ),
       ),
       body: Stack(
         children: [

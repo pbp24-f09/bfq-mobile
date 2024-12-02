@@ -280,27 +280,24 @@ Widget build(BuildContext context) {
   final request = context.watch<CookieRequest>();
 
   return Scaffold(
+    backgroundColor: Theme.of(context).colorScheme.primary,
     appBar: AppBar(
-      title: const Text('Admin Dashboard'),
-      actions: [
-        IconButton(
-          icon: const Icon(Icons.logout),
-          onPressed: () async {
-            final response = await request.logout("http://127.0.0.1:8000/logout-flutter/");
-            String message = response["message"];
-            if (context.mounted) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text("$message Logout berhasil.")),
-              );
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => const MenuPage()),
-              );
-            }
-          },
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset(
+              'assets/images/logo.png',
+              width: 75,
+              height: 50,
+            ),
+          ],
         ),
-      ],
-    ),
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        elevation: 6,
+        iconTheme: const IconThemeData(
+          color: Colors.white, // Warna ikon back
+        ),
+      ),
     drawer: const LeftDrawer(),
     body: SingleChildScrollView(
       child: Column(
