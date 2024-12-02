@@ -1,3 +1,4 @@
+import 'package:bfq/categories/screens/categories.dart';
 import 'package:flutter/material.dart';
 import 'package:bfq/main/screens/menu.dart';
 import 'package:bfq/main/screens/menu_admin.dart';
@@ -99,6 +100,18 @@ class LeftDrawer extends StatelessWidget {
                         context,
                         MaterialPageRoute(
                           builder: (context) => const UserProfilePage(),
+                        ),
+                      );
+                    },
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.search),
+                    title: const Text('Categories'),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const CategoriesPage(),
                         ),
                       );
                     },
