@@ -93,6 +93,8 @@ class _LoginPageState extends State<LoginPage> {
                 if (response.containsKey('role') && response.containsKey('message')) {
                   String role = response['role'];
                   String uname = response['username'];
+                  String fullname = response['full_name'];
+                  String profile_photo = response['profile_photo'];
 
                   if (context.mounted) {
                     if (role == 'customer') {

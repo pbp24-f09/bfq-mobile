@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:bfq/widgets/appbar.dart';
 import 'package:bfq/widgets/left_drawer.dart';
-
+import 'edit_profile.dart';
 
 class UserProfilePage extends StatefulWidget {
   const UserProfilePage({Key? key}) : super(key: key);
@@ -124,7 +124,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                     // Logic to delete the account can be implemented here
                                   },
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: const Color(0xFFB48125),
+                                    backgroundColor: Colors.red,
                                     foregroundColor: Colors.white,
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 24, vertical: 12),
@@ -156,7 +156,12 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                     const SizedBox(width: 8),
                                     IconButton(
                                       onPressed: () {
-                                        // Placeholder: Logic for editing profile can be added here
+                                        Navigator.pushReplacement(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => const UserProfileEditPage(),
+                                          ),
+                                        );
                                       },
                                       icon: const Icon(Icons.edit),
                                       color: const Color(0xFFB48125),
