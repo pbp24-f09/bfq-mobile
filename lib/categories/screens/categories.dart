@@ -235,12 +235,34 @@ class _CategoriesPageState extends State<CategoriesPage> {
                   child: TextField(
                     controller: searchController,
                     decoration: InputDecoration(
-                      labelText: "Enter food or restaurant",    // use "hintText" for placeholder
-                      prefixIcon: const Icon(Icons.search),
+                      labelText: "Enter food or restaurant",   // use "hintText" for placeholder
+                      labelStyle: const TextStyle(color: Colors.white),
+                      prefixIcon: const Icon(Icons.search, color: Colors.white),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Theme.of(context).colorScheme.secondary),
+                        borderRadius: BorderRadius.circular(12)
+                      )
                     ),
+
+                    onSubmitted: (value) async {
+                      if (value.isNotEmpty){
+                        final response = await http.post(
+                          Uri.parse("http://127.0.0.1:8000/search-filter/"),
+                          body: {'value': value},
+                          headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                        );
+
+                        if (response.statusCode == 200) {
+                          // Successfully sent the query
+                          print('Search query sent successfully: ${response.body}');
+                        } else {
+                          print('Failed to send query. Status code: ${response.statusCode}');
+                        }
+                      }
+                    },
                   ),
                 ),
                 Padding(
