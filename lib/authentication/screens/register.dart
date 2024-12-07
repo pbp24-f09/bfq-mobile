@@ -112,6 +112,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   borderRadius: BorderRadius.all(Radius.circular(12.0)),
                 ),
               ),
+              dropdownColor: const Color(0xFFF3EAD8),
               items: const [
                 DropdownMenuItem(value: 'MALE', child: Text('Male')),
                 DropdownMenuItem(value: 'FEMALE', child: Text('Female')),
