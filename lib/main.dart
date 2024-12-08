@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:bfq/main/screens/splash_screen.dart';
 import 'package:bfq/authentication/screens/login.dart';
+import 'package:bfq/blog/screens/blog_form.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
 
