@@ -41,10 +41,10 @@ class _BlogListPageState extends State<BlogListPage> {
   }
 
   final List<String> carouselImages = [
-    'images/poster-1.jpg',
-    'images/poster-2.jpg',
-    'images/poster-3.jpg',
-    'images/poster-4.jpg',
+    'assets/images/poster_1.png',
+    'assets/images/poster_2.png',
+    'assets/images/poster_3.png',
+    'assets/images/poster_4.png',
   ];
 
   Widget _buildCarousel() {
