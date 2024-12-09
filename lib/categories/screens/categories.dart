@@ -5,18 +5,32 @@ import 'package:http/http.dart' as http;
 import 'package:bfq/categories/models/product_cat.dart'; // Adjust the import path as necessary
 
 class ProductService {
-  Future<List<ProductEntry>> fetchProductEntries({String? query}) async {
-    final uri = query == null 
-      ? Uri.parse('http://127.0.0.1:8000/json/') 
-      : Uri.parse('http://127.0.0.1:8000/search-filter/');
+  Future<List<ProductEntry>> fetchProductEntries({
+    String? query,
+    String? range,
+    String? category,
+    String? order,
+  }) async {
+    
+    final dynamic uri;
+    final dynamic response;
+    if (query == null && range == null && category == null){
+      uri = Uri.parse('http://127.0.0.1:8000/json/');
+      response = await http.get(uri);
 
-    final response = query == null
-      ? await http.get(uri)
-      : await http.post(
-          uri,
-          body: {'value': query},
-          headers: {'Content-Type': 'application/x-www-form-urlencoded'}, 
-        );
+    } else {
+      uri = Uri.parse('http://127.0.0.1:8000/search-filter/');
+      response = await http.post(
+        uri,
+        body: {
+          if (query != null && query.isNotEmpty) 'value': query,
+          if (range != null) 'range': range,
+          if (category != null) 'category': category,
+          if (order != null) 'order': order,
+        },
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+      );
+    }
 
     if (response.statusCode == 200) {
       return productEntryFromJson(response.body);
@@ -37,6 +51,9 @@ class _CategoriesPageState extends State<CategoriesPage> {
   late Future<List<ProductEntry>> _productEntries;
   final ProductService _service = ProductService();
   final TextEditingController _searchController = TextEditingController();
+  String? selectedRange;
+  String? selectedCat;
+  String? priceOrder;
 
   @override
   void initState() {
@@ -44,9 +61,14 @@ class _CategoriesPageState extends State<CategoriesPage> {
     _loadProducts();    // Load product di awal
   }
 
-  void _loadProducts({String? query}) {
+  void _loadProducts({String? query, String? range, String? category, String? order}) {
     setState(() {
-      _productEntries = _service.fetchProductEntries(query: query);
+      _productEntries = _service.fetchProductEntries(
+        query: query, 
+        range: range, 
+        category: category,
+        order: order,
+      );
     });
   }
 
@@ -82,7 +104,12 @@ class _CategoriesPageState extends State<CategoriesPage> {
 
               onSubmitted: (value)  {
                 // Fetch filtered products based on the search query
-                _loadProducts(query: value.isNotEmpty ? value : null);
+                _loadProducts(
+                  query: value.isNotEmpty ? value : null,
+                  range: selectedRange, 
+                  category: selectedCat,
+                  order: priceOrder,
+                );
               },
             ),
           ),
@@ -91,9 +118,9 @@ class _CategoriesPageState extends State<CategoriesPage> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                ElevatedButton(
+                ElevatedButton(                   // Filter button
                   onPressed: () {
-                    
+                    showFilterForm(context);
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Theme.of(context).colorScheme.secondary,
@@ -106,17 +133,30 @@ class _CategoriesPageState extends State<CategoriesPage> {
                 const Padding(
                   padding: EdgeInsets.all(8)
                 ),
-                ElevatedButton(
-                  onPressed: () {
-
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Theme.of(context).colorScheme.secondary,
-                  ),
-                  child: const Icon(
-                    Icons.arrow_upward_rounded,
-                    color: Colors.white,
-                  ),                      
+                DropdownButton(           // Price sort dropdown
+                  value: priceOrder,
+                  hint: const Text("Sort Price"),
+                  items: const [
+                    DropdownMenuItem(
+                      value: "Lowest",
+                      child: Text("Lowest Price"),
+                    ),
+                    DropdownMenuItem(
+                      value: "Highest",
+                      child: Text("Highest Price"),
+                    ),
+                  ], 
+                  onChanged: (value) {
+                    setState(() {
+                      priceOrder = value;
+                      _loadProducts(
+                        query: _searchController.text,
+                        range: selectedRange,
+                        category: selectedCat,
+                        order: value,
+                      );
+                    });
+                  }
                 ),
               ]
             ),
@@ -226,6 +266,143 @@ class _CategoriesPageState extends State<CategoriesPage> {
       )
     );
   }
+
+  void showFilterForm(BuildContext context) {
+    showDialog(
+      context: context, 
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: Theme.of(context).colorScheme.onPrimary,
+          title: const Text("What Types Are You Searching For?"),
+          content: StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+              return SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Padding(
+                      padding: EdgeInsets.only(top: 15)
+                    ),
+                    const Text("By Price Range"),               // Select by Price Range
+                    const Padding(
+                      padding: EdgeInsets.only(bottom: 8)
+                    ),
+                    RadioListTile<String>(
+                      title: const Text("Less than 50.000"),
+                      value: "Less than 50.000", 
+                      groupValue: selectedRange,
+                      onChanged: (value) {
+                        setState(() {
+                          selectedRange = value;
+                        });
+                      }
+                    ),
+                    RadioListTile<String>(
+                      title: const Text("50.000 - 100.000"),
+                      value: "50.000 - 100.000", 
+                      groupValue: selectedRange,
+                      onChanged: (value) {
+                        setState(() {
+                          selectedRange = value;
+                        });
+                      }
+                    ),
+                    RadioListTile<String>(
+                      title: const Text("100.000 - 150.000"),
+                      value: "100.000 - 150.000", 
+                      groupValue: selectedRange,
+                      onChanged: (value) {
+                        setState(() {
+                          selectedRange = value;
+                        });
+                      }
+                    ),
+                    RadioListTile<String>(
+                      title: const Text("More than 150.000"),
+                      value: "More than 150.000", 
+                      groupValue: selectedRange,
+                      onChanged: (value) {
+                        setState(() {
+                          selectedRange = value;
+                        });
+                      }
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.only(top: 15)
+                    ),
+                    const Text("By Category"),                     // Select by Category
+                    const Padding(
+                      padding: EdgeInsets.only(bottom: 8)
+                    ),
+                    RadioListTile<String>(
+                      title: const Text("Makanan Berat & Nasi"),
+                      value: "Makanan Berat & Nasi", 
+                      groupValue: selectedCat,
+                      onChanged: (value) {
+                        setState(() {
+                          selectedCat = value;
+                        });
+                      }
+                    ),
+                    RadioListTile<String>(
+                      title: const Text("Olahan Ayam & Daging"),
+                      value: "Olahan Ayam & Daging", 
+                      groupValue: selectedCat,
+                      onChanged: (value) {
+                        setState(() {
+                          selectedCat = value;
+                        });
+                      }
+                    ),
+                    RadioListTile<String>(
+                      title: const Text("Mie, Pasta, & Spaghetti"),
+                      value: "Mie, Pasta, & Spaghetti", 
+                      groupValue: selectedCat,
+                      onChanged: (value) {
+                        setState(() {
+                          selectedCat = value;
+                        });
+                      }
+                    ),
+                    RadioListTile<String>(
+                      title: const Text("Makanan Ringan & Cemilan"),
+                      value: "Makanan Ringan & Cemilan", 
+                      groupValue: selectedCat,
+                      onChanged: (value) {
+                        setState(() {
+                          selectedCat = value;
+                        });
+                      }
+                    ),
+                  ],
+                )
+              );
+            }
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              }, 
+              child: const Text("Cancel"),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                _loadProducts(
+                  query: _searchController.text,
+                  range: selectedRange,
+                  category: selectedCat,
+                  order: priceOrder,
+                );
+              }, 
+              child: const Text("Filterize"),
+            ),
+          ],
+        );
+      }
+    );
+  } 
 
   Widget _buildDetailRow(IconData icon, String label, String value) {
     return Row(
