@@ -4,6 +4,7 @@ import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:bfq/widgets/left_drawer.dart';
 import 'menu.dart';
 import 'product_form.dart';
+import 'edit_form.dart';
 import '../services/api_service.dart'; 
 import 'package:carousel_slider/carousel_slider.dart';
 import '../models/product.dart';
@@ -109,7 +110,7 @@ class _MenuAdminPageState extends State<MenuAdminPage> {
     );
   }
 
-  void _showProductDetails(BuildContext context, Product product) {
+ void _showProductDetails(BuildContext context, Product product) {
   showDialog(
     context: context,
     builder: (BuildContext context) {
@@ -123,111 +124,147 @@ class _MenuAdminPageState extends State<MenuAdminPage> {
             color: Colors.white,
             borderRadius: BorderRadius.circular(20),
           ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.center,
+          child: Stack(
+            alignment: Alignment.center,
             children: [
-              // Close button and title section
-              Stack(
-                alignment: Alignment.center,
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  // Title
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.fromLTRB(16, 16, 40, 16),
-                    decoration: const BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-                    ),
-                    child: Text(
-                      product.name,
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF333333),
+                  // Close button and title section
+                  Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      // Title
+                      Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.fromLTRB(16, 16, 40, 16),
+                        decoration: const BoxDecoration(
+                          color: Colors.white,
+                          borderRadius:
+                              BorderRadius.vertical(top: Radius.circular(20)),
+                        ),
+                        child: Text(
+                          product.name,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF333333),
+                          ),
+                        ),
+                      ),
+                      // Close button
+                      Positioned(
+                        right: 8,
+                        top: 8,
+                        child: InkWell(
+                          onTap: () => Navigator.pop(context),
+                          child: Container(
+                            padding: const EdgeInsets.all(4),
+                            decoration: const BoxDecoration(
+                              color: Color(0xFF8B4513),
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Icon(
+                              Icons.close,
+                              color: Colors.white,
+                              size: 20,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  // Product Image
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(15),
+                      child: AspectRatio(
+                        aspectRatio: 1.0, // Ensures 1:1 aspect ratio
+                        child: product.imageUrl.isNotEmpty
+                            ? Image.network(
+                                product.imageUrl,
+                                fit: BoxFit.cover,
+                              )
+                            : const Icon(Icons.image_not_supported, size: 100),
                       ),
                     ),
                   ),
-                  // Close button
-                  Positioned(
-                    right: 8,
-                    top: 8,
-                    child: InkWell(
-                      onTap: () => Navigator.pop(context),
-                      child: Container(
-                        padding: const EdgeInsets.all(4),
-                        decoration: const BoxDecoration(
-                          color: Color(0xFF8B4513),
-                          shape: BoxShape.circle,
+                  // Product Details
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(24, 16, 24, 20),
+                    child: Column(
+                      children: [
+                        // Price
+                        Text(
+                          "${product.price} IDR",
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF1B4332),
+                          ),
                         ),
-                        child: const Icon(
-                          Icons.close,
-                          color: Colors.white,
-                          size: 20,
+                        const SizedBox(height: 12),
+                        // Details with smaller text and icons
+                        _buildDetailRow(
+                          Icons.restaurant,
+                          'Restaurant',
+                          product.restaurant,
                         ),
-                      ),
+                        const SizedBox(height: 8),
+                        _buildDetailRow(
+                          Icons.category,
+                          'Categories',
+                          product.category,
+                        ),
+                        const SizedBox(height: 8),
+                        _buildDetailRow(
+                          Icons.location_on,
+                          'Location',
+                          product.location.toUpperCase(),
+                        ),
+                        const SizedBox(height: 8),
+                        _buildDetailRow(
+                          Icons.phone,
+                          'Contact',
+                          product.contact,
+                        ),
+                      ],
                     ),
                   ),
                 ],
               ),
-              // Product Image
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(15),
-                  child: AspectRatio(
-                    aspectRatio: 1.0, // Ensures 1:1 aspect ratio
-                    child: product.imageUrl.isNotEmpty
-                        ? Image.network(
-                            product.imageUrl,
-                            fit: BoxFit.cover,
-                          )
-                        : const Icon(Icons.image_not_supported, size: 100),
-                  ),
-                ),
-              ),
-              // Product Details
-              Padding(
-                padding: const EdgeInsets.fromLTRB(24, 16, 24, 20),
-                child: Column(
-                  children: [
-                    // Price
-                    Text(
-                      "${product.price} IDR",
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF1B4332),
+              // Floating Edit Button
+              Positioned(
+                top: 16,
+                right: 16,
+                child: InkWell(
+                  onTap: () {
+                    Navigator.pop(context); // Tutup dialog
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ProductEditPage(
+                          productId: product.id, // UUID dalam bentuk String
+                        ),
                       ),
+                    );
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: const BoxDecoration(
+                      color: Color(0xFF1B4332),
+                      shape: BoxShape.circle,
                     ),
-                    const SizedBox(height: 12),
-                    // Details with smaller text and icons
-                    _buildDetailRow(
-                      Icons.restaurant,
-                      'Restaurant',
-                      product.restaurant,
+                    child: const Icon(
+                      Icons.edit,
+                      color: Colors.white,
+                      size: 20,
                     ),
-                    const SizedBox(height: 8),
-                    _buildDetailRow(
-                      Icons.category,
-                      'Categories',
-                      product.category,
-                    ),
-                    const SizedBox(height: 8),
-                    _buildDetailRow(
-                      Icons.location_on,
-                      'Location',
-                      product.location.toUpperCase(),
-                    ),
-                    const SizedBox(height: 8),
-                    _buildDetailRow(
-                      Icons.phone,
-                      'Contact',
-                      product.contact,
-                    ),
-                  ],
+                  ),
                 ),
               ),
             ],
@@ -237,6 +274,7 @@ class _MenuAdminPageState extends State<MenuAdminPage> {
     },
   );
 }
+
 
 
   Widget _buildDetailRow(IconData icon, String label, String value) {
