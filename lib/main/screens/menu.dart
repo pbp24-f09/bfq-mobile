@@ -348,7 +348,7 @@ class _MenuPageState extends State<MenuPage> {
                           );
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color.fromARGB(255, 128, 106, 17),
+                          backgroundColor: Theme.of(context).colorScheme.secondary,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
