@@ -1,3 +1,4 @@
+import 'package:bfq/blog/screens/blog_list.dart';
 import 'package:bfq/categories/screens/categories.dart';
 import 'package:flutter/material.dart';
 import 'package:bfq/main/screens/menu.dart';
@@ -111,6 +112,18 @@ class LeftDrawer extends StatelessWidget {
                         context,
                         MaterialPageRoute(
                           builder: (context) => const UserProfilePage(),
+                        ),
+                      );
+                    },
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.article),
+                    title: const Text('Blog'),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const BlogListPage(),
                         ),
                       );
                     },
