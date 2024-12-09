@@ -5,6 +5,7 @@ import 'package:bfq/authentication/screens/register.dart';
 import 'package:bfq/main/screens/menu_customer.dart';
 import 'package:bfq/main/screens/menu_admin.dart';
 import 'package:bfq/authentication/widgets/auth_layout.dart';
+import 'package:bfq/authentication/user_provider.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -22,6 +23,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     final request = context.watch<CookieRequest>();
+    final userProvider = context.read<UserProvider>();
 
     return AuthLayout(
       title: 'Login',
@@ -90,11 +92,22 @@ class _LoginPageState extends State<LoginPage> {
               );
 
               if (request.loggedIn) {
-                if (response.containsKey('role') && response.containsKey('message')) {
+                if (response.containsKey('role') &&
+                    response.containsKey('username')) {
                   String role = response['role'];
                   String uname = response['username'];
-                  String fullname = response['full_name'];
-                  String profile_photo = response['profile_photo'];
+
+                  // Update UserProvider dengan data user dari API
+                  userProvider.updateUser(
+                    fullName: response['full_name'] ?? '',
+                    email: response['email'] ?? '',
+                    profilePhoto: response['profile_photo'] ?? '',
+                    username: uname,
+                    age: response['age'] ?? 0,
+                    gender: response['gender'] ?? '',
+                    phoneNumber: response['phone_number'] ?? '',
+                    role: role,
+                  );
 
                   if (context.mounted) {
                     if (role == 'customer') {
@@ -120,6 +133,13 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     );
                   }
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text("Login successful but user data is missing."),
+                      backgroundColor: Colors.orange,
+                    ),
+                  );
                 }
               } else {
                 setState(() {

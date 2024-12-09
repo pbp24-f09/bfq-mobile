@@ -1,9 +1,13 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:bfq/widgets/appbar.dart';
 import 'package:bfq/widgets/left_drawer.dart';
+import 'package:bfq/authentication/user_provider.dart';
 import 'edit_profile.dart';
+import 'package:bfq/main/screens/menu.dart';
 
 class UserProfilePage extends StatefulWidget {
   const UserProfilePage({Key? key}) : super(key: key);
@@ -50,8 +54,311 @@ class _UserProfilePageState extends State<UserProfilePage> {
     }
   }
 
+  Widget _editPhotoModal(BuildContext context) {
+    final TextEditingController _photoUrlController = TextEditingController();
+    final request = context.read<CookieRequest>();
+    bool isLoading = false;
+
+    // Fetch current photo URL
+    void _fetchCurrentPhoto() async {
+      final response =
+          await request.get('http://127.0.0.1:8000/profile-flutter/');
+      if (response.containsKey('profile_photo')) {
+        _photoUrlController.text = response['profile_photo'] ?? '';
+      }
+    }
+
+    // Update photo
+    Future<void> _updatePhoto(String photoUrl) async {
+      try {
+        setState(() => isLoading = true);
+        final response = await request.postJson(
+          'http://127.0.0.1:8000/update-photo-flutter/',
+          jsonEncode(<String, String>{
+            'photo_url': photoUrl,
+          }),
+        );
+
+        if (response['status'] == 'success') {
+          // Update UserProvider
+          context.read<UserProvider>().updateUser(
+            fullName: profileData!['full_name'] ?? '',
+            email: profileData!['email'] ?? '',
+            username: profileData!['username'] ?? '',
+            age: profileData!['age'] ?? 0,
+            gender: profileData!['gender']?? '',
+            phoneNumber: profileData!['phone_number'] ?? '',
+            role: profileData!['role'] ?? '',
+            profilePhoto: photoUrl,
+          );
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Photo updated successfully'),
+              backgroundColor: Colors.green,
+            ),
+          );
+          Navigator.pop(context); // Close modal
+          _fetchUserProfile(); // Refresh User Profile Page
+        } else {
+          throw Exception(response['message'] ?? 'Failed to update photo');
+        }
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      } finally {
+        setState(() => isLoading = false);
+      }
+    }
+
+    // Delete photo
+    Future<void> _deletePhoto() async {
+      try {
+        setState(() => isLoading = true);
+        final response = await request.postJson(
+          'http://127.0.0.1:8000/delete-photo-flutter/',
+          jsonEncode({}),
+        );
+
+        if (response['status'] == 'success') {
+          context.read<UserProvider>().updateUser(
+            fullName: profileData!['full_name'] ?? '',
+            email: profileData!['email'] ?? '',
+            username: profileData!['username'] ?? '',
+            age: profileData!['age'] ?? 0,
+            gender: profileData!['gender']?? '',
+            phoneNumber: profileData!['phone_number'] ?? '',
+            role: profileData!['role'] ?? '',
+            profilePhoto: '',
+          );
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Photo deleted successfully'),
+              backgroundColor: Colors.green,
+            ),
+          );
+          Navigator.pop(context); // Close modal
+          _fetchUserProfile(); // Refresh User Profile Page
+        } else {
+          throw Exception(response['message'] ?? 'Failed to delete photo');
+        }
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      } finally {
+        setState(() => isLoading = false);
+      }
+    }
+
+    _fetchCurrentPhoto();
+
+    return StatefulBuilder(
+      builder: (BuildContext context, StateSetter setState) {
+        return AlertDialog(
+          backgroundColor: Colors.white,
+          title: const Text(
+            'Edit Photo',
+            style: TextStyle(color: Color(0xFFB48125)),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: _photoUrlController,
+                decoration: const InputDecoration(
+                  labelText: 'Photo URL',
+                  border: OutlineInputBorder(),
+                  hintText: 'Enter the new photo URL',
+                ),
+              ),
+              const SizedBox(height: 20),
+              isLoading
+                  ? const Center(child: CircularProgressIndicator())
+                  : Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        ElevatedButton(
+                          onPressed: _deletePhoto,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.red,
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 24, vertical: 12),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          child: const Text('Delete Photo'),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            _updatePhoto(_photoUrlController.text);
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFFB48125),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 24, vertical: 12),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          child: const Text('Save Changes'),
+                        ),
+                      ],
+                    ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _deleteAccountModal(BuildContext context) {
+    final TextEditingController _usernameController = TextEditingController();
+    final TextEditingController _passwordController = TextEditingController();
+    final TextEditingController _confirmPasswordController =
+        TextEditingController();
+    bool isLoading = false;
+
+    Future<void> _deleteAccount() async {
+      final request = context.read<CookieRequest>();
+      try {
+        setState(() => isLoading = true);
+        final response = await request.postJson(
+          'http://127.0.0.1:8000/delete-account-flutter/',
+          jsonEncode(<String, String>{
+            'username': _usernameController.text,
+            'password': _passwordController.text,
+            'confirm_password': _confirmPasswordController.text,
+          }),
+        );
+
+        if (response['success'] == true) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Account deleted successfully'),
+              backgroundColor: Colors.green,
+            ),
+          );
+          Navigator.pop(context); // Close modal
+          context.read<UserProvider>().resetUser(); // Reset data user
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text("Goodbye!"),
+            ),
+          );
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const MenuPage(),
+            ),
+          );
+        } else {
+          throw Exception(response['error'] ?? 'Failed to delete account');
+        }
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      } finally {
+        setState(() => isLoading = false);
+      }
+    }
+
+    return StatefulBuilder(
+      builder: (BuildContext context, StateSetter setState) {
+        return AlertDialog(
+          backgroundColor: Colors.white,
+          title: const Text(
+            'Delete Account',
+            style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text(
+                'Are you sure you want to delete your account? This action cannot be undone.',
+                style: TextStyle(fontSize: 14),
+              ),
+              const SizedBox(height: 16),
+              TextField(
+                controller: _usernameController,
+                decoration: const InputDecoration(
+                  labelText: 'Username',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              const SizedBox(height: 16),
+              TextField(
+                controller: _passwordController,
+                obscureText: true,
+                decoration: const InputDecoration(
+                  labelText: 'Password',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              const SizedBox(height: 16),
+              TextField(
+                controller: _confirmPasswordController,
+                obscureText: true,
+                decoration: const InputDecoration(
+                  labelText: 'Confirm Password',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              const SizedBox(height: 20),
+              isLoading
+                  ? const CircularProgressIndicator()
+                  : Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.pop(context); // Close modal
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.grey,
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 24, vertical: 12),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          child: const Text('Cancel'),
+                        ),
+                        ElevatedButton(
+                          onPressed: _deleteAccount,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.red,
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 24, vertical: 12),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          child: const Text('Confirm Delete'),
+                        ),
+                      ],
+                    ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    final userProvider = context.watch<UserProvider>();
     return Scaffold(
       key: _scaffoldKey,
       backgroundColor: Theme.of(context).colorScheme.primary,
@@ -100,13 +407,18 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                       : const AssetImage(
                                           'assets/images/default-profile.jpg',
                                         ) as ImageProvider,
-                                  onBackgroundImageError: (_, __) => const Icon(Icons.error),
+                                  onBackgroundImageError: (_, __) =>
+                                      const Icon(Icons.error),
                                 ),
                                 const SizedBox(height: 20),
                                 ElevatedButton(
                                   onPressed: () {
-
-                                  }, // Placeholder for edit photo logic
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) =>
+                                          _editPhotoModal(context),
+                                    );
+                                  },
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: const Color(0xFFB48125),
                                     foregroundColor: Colors.white,
@@ -118,10 +430,13 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                   ),
                                   child: const Text("Edit Photo"),
                                 ),
-                                const SizedBox(height: 20),
+                                const SizedBox(height: 10),
                                 ElevatedButton(
                                   onPressed: () {
-                                    // Logic to delete the account can be implemented here
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) => _deleteAccountModal(context),
+                                    );
                                   },
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.red,
@@ -154,33 +469,39 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                       ),
                                     ),
                                     const SizedBox(width: 8),
-                                    IconButton(
-                                      onPressed: () {
-                                        Navigator.pushReplacement(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => const UserProfileEditPage(),
-                                          ),
-                                        );
-                                      },
-                                      icon: const Icon(Icons.edit),
-                                      color: const Color(0xFFB48125),
-                                    ),
+                                    if (userProvider.role != 'admin') ...[
+                                      IconButton(
+                                        onPressed: () {
+                                          Navigator.pushReplacement(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => const UserProfileEditPage(),
+                                            ),
+                                          );
+                                        },
+                                        icon: const Icon(Icons.edit),
+                                        color: const Color(0xFFB48125),
+                                      ),
+                                    ],
                                   ],
                                 ),
                                 const SizedBox(height: 20),
-                                _buildProfileItem("Full Name", profileData!['full_name']),
-                                _buildProfileItem("Email", profileData!['email']),
-                                _buildProfileItem(
-                                  "Date Joined",
-                                  profileData!['date_joined'] ?? 'N/A',
-                                ),
-                                _buildProfileItem("Age", profileData!['age']?.toString() ?? 'N/A'),
-                                _buildProfileItem("Gender", profileData!['gender'] ?? 'N/A'),
-                                _buildProfileItem(
-                                  "Phone Number",
-                                  profileData!['phone_number'] ?? 'N/A',
-                                ),
+                                if (userProvider.role == 'admin') ...[
+                                  _buildProfileItem("Email", profileData!['email']),
+                                  _buildProfileItem("Date Joined",
+                                      profileData!['date_joined'] ?? 'N/A'),
+                                ] else ...[
+                                  _buildProfileItem("Full Name", profileData!['full_name']),
+                                  _buildProfileItem("Email", profileData!['email']),
+                                  _buildProfileItem("Date Joined",
+                                      profileData!['date_joined'] ?? 'N/A'),
+                                  _buildProfileItem(
+                                      "Age", profileData!['age']?.toString() ?? 'N/A'),
+                                  _buildProfileItem(
+                                      "Gender", profileData!['gender'] ?? 'N/A'),
+                                  _buildProfileItem("Phone Number",
+                                      profileData!['phone_number'] ?? 'N/A'),
+                                ],
                               ],
                             ),
                           ),

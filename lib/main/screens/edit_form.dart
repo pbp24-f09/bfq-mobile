@@ -1,17 +1,20 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
-import 'menu_admin.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'menu_admin.dart';
 
-class ProductFormPage extends StatefulWidget {
-  const ProductFormPage({super.key});
+class ProductEditPage extends StatefulWidget {
+  final String productId; // UUID sebagai string
+
+  const ProductEditPage({super.key, required this.productId});
 
   @override
-  State<ProductFormPage> createState() => _ProductFormPageState();
+  State<ProductEditPage> createState() => _ProductEditPageState();
 }
 
-class _ProductFormPageState extends State<ProductFormPage> {
+class _ProductEditPageState extends State<ProductEditPage> {
   final _formKey = GlobalKey<FormState>();
   String _name = "";
   int _price = 0;
@@ -23,6 +26,42 @@ class _ProductFormPageState extends State<ProductFormPage> {
   XFile? _pickedFile;
 
   final ImagePicker _picker = ImagePicker();
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchProductDetails();
+  }
+
+  // Fetch product details
+  Future<void> _fetchProductDetails() async {
+    var uri = Uri.parse("http://127.0.0.1:8000/product-json/${widget.productId}/");
+    try {
+      final response = await http.get(uri);
+      if (response.statusCode == 200) {
+        final List<dynamic> data = json.decode(response.body);
+        if (data.isNotEmpty) {
+          final product = data[0]['fields'];
+          setState(() {
+            _name = product['name'];
+            _price = product['price'];
+            _restaurant = product['restaurant'];
+            _location = product['location'];
+            _contact = product['contact'];
+            _category = product['cat'];
+          });
+        }
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Failed to fetch product details.")),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Error: $e")),
+      );
+    }
+  }
 
   // Function to Pick an Image
   Future<void> _pickImage() async {
@@ -39,63 +78,61 @@ class _ProductFormPageState extends State<ProductFormPage> {
 
   // Function to Submit Form
   Future<void> _submitForm() async {
-  if (_formKey.currentState!.validate() && _pickedFile != null) {
-    var uri = Uri.parse("http://127.0.0.1:8000/create-flutter/");
-    var request = http.MultipartRequest('POST', uri);
+    if (_formKey.currentState!.validate()) {
+      var uri = Uri.parse("http://127.0.0.1:8000/edit-flutter/${widget.productId}");
+      var request = http.MultipartRequest('POST', uri);
 
-    // Add form fields
-    request.fields['name'] = _name;
-    request.fields['price'] = _price.toString();
-    request.fields['restaurant'] = _restaurant;
-    request.fields['location'] = _location;
-    request.fields['contact'] = _contact;
-    request.fields['cat'] = _category;
+      // Add form fields
+      request.fields['name'] = _name;
+      request.fields['price'] = _price.toString();
+      request.fields['restaurant'] = _restaurant;
+      request.fields['location'] = _location;
+      request.fields['contact'] = _contact;
+      request.fields['cat'] = _category;
 
-    // Convert image to bytes for upload
-    final imageBytes = await _pickedFile!.readAsBytes();
-
-    // Add image file as bytes
-    request.files.add(
-      http.MultipartFile.fromBytes(
-        'image',
-        imageBytes,
-        filename: _pickedFile!.name, // Ensure the name is set
-      ),
-    );
-
-    try {
-      var response = await request.send();
-      if (response.statusCode == 200) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Product successfully saved!")),
-        );
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => MenuAdminPage()),
-        );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Failed to save product.")),
+      // Add image file if updated
+      if (_pickedFile != null) {
+        final imageBytes = await _pickedFile!.readAsBytes();
+        request.files.add(
+          http.MultipartFile.fromBytes(
+            'image',
+            imageBytes,
+            filename: _pickedFile!.name,
+          ),
         );
       }
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Error: $e")),
-      );
+
+      try {
+        var response = await request.send();
+        if (response.statusCode == 200) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Product successfully updated!")),
+          );
+          // Redirect to MenuAdminPage
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => MenuAdminPage()),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Failed to update product.")),
+          );
+        }
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Error: $e")),
+        );
+      }
     }
-  } else if (_pickedFile == null) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text("Please select an image!")),
-    );
   }
-}
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
         title: const Center(
-          child: Text('Add a New Product'),
+          child: Text('Edit Product'),
         ),
       ),
       body: Form(
@@ -108,6 +145,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
+                  initialValue: _name,
                   decoration: InputDecoration(
                     hintText: "Product Name",
                     labelText: "Name",
@@ -132,6 +170,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
+                  initialValue: _price.toString(),
                   decoration: InputDecoration(
                     hintText: "Price",
                     labelText: "Price",
@@ -263,12 +302,13 @@ class _ProductFormPageState extends State<ProductFormPage> {
                   },
                 ),
               ),
+
               // Image Picker Button
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: ElevatedButton(
                   onPressed: _pickImage,
-                  child: const Text("Select Image"),
+                  child: const Text("Select New Image (Optional)"),
                 ),
               ),
 
@@ -290,7 +330,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
                   child: ElevatedButton(
                     onPressed: _submitForm,
                     child: const Text(
-                      "Save",
+                      "Save Changes",
                       style: TextStyle(color: Colors.white),
                     ),
                   ),
@@ -303,4 +343,3 @@ class _ProductFormPageState extends State<ProductFormPage> {
     );
   }
 }
-

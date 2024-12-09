@@ -5,7 +5,6 @@ import 'package:bfq/authentication/screens/login.dart';
 import 'package:bfq/authentication/screens/register.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
-
 class MenuPage extends StatefulWidget {
   const MenuPage({Key? key}) : super(key: key);
 

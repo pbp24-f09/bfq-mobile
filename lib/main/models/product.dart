@@ -24,7 +24,7 @@ class Product {
     final fields = json['fields'];
     const String mediaBaseUrl = 'http://127.0.0.1:8000/media/'; // Base URL for media files
     return Product(
-      id: json['pk'],
+      id: json['pk'].toString(),
       name: fields['name'],
       price: fields['price'],
       restaurant: fields['restaurant'],
