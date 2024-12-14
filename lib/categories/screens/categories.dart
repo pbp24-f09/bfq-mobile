@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:bfq/widgets/left_drawer.dart';
-import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:bfq/categories/models/product_cat.dart'; // Adjust the import path as necessary
+import 'dart:convert';
 
 class ProductService {
   Future<List<ProductEntry>> fetchProductEntries({
     String? query,
-    String? range,
-    String? category,
+    List<String>? range,
+    List<String>? category,
     String? order,
   }) async {
     
@@ -22,13 +22,13 @@ class ProductService {
       uri = Uri.parse('http://127.0.0.1:8000/search-filter/');
       response = await http.post(
         uri,
-        body: {
+        body: jsonEncode({
           if (query != null && query.isNotEmpty) 'value': query,
           if (range != null) 'range': range,
           if (category != null) 'category': category,
           if (order != null) 'order': order,
-        },
-        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        }),
+        headers: {'Content-Type': 'application/json'},
       );
     }
 
@@ -51,8 +51,8 @@ class _CategoriesPageState extends State<CategoriesPage> {
   late Future<List<ProductEntry>> _productEntries;
   final ProductService _service = ProductService();
   final TextEditingController _searchController = TextEditingController();
-  String? selectedRange;
-  String? selectedCat;
+  List<String> selectedRange = [];
+  List<String> selectedCat = [];
   String? priceOrder;
 
   @override
@@ -61,7 +61,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
     _loadProducts();    // Load product di awal
   }
 
-  void _loadProducts({String? query, String? range, String? category, String? order}) {
+  void _loadProducts({String? query, List<String>? range, List<String>? category, String? order}) {
     setState(() {
       _productEntries = _service.fetchProductEntries(
         query: query, 
@@ -153,7 +153,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
                         query: _searchController.text,
                         range: selectedRange,
                         category: selectedCat,
-                        order: value,
+                        order: priceOrder,
                       );
                     });
                   }
@@ -267,6 +267,12 @@ class _CategoriesPageState extends State<CategoriesPage> {
     );
   }
 
+  final List<String> rangeOptions = ["Less than 50.000", "50.000 - 100.000", "100.000 - 150.000", "More than 150.000"];
+  final List<String> catOptions = ["Makanan Berat & Nasi", "Olahan Ayam & Daging", "Mie, Pasta, & Spaghetti", "Makanan Ringan & Cemilan"];
+
+  List<bool> rangeVal = [false, false, false, false];
+  List<bool> catVal = [false, false, false, false];
+
   void showFilterForm(BuildContext context) {
     showDialog(
       context: context, 
@@ -287,43 +293,39 @@ class _CategoriesPageState extends State<CategoriesPage> {
                     const Padding(
                       padding: EdgeInsets.only(bottom: 8)
                     ),
-                    RadioListTile<String>(
-                      title: const Text("Less than 50.000"),
-                      value: "Less than 50.000", 
-                      groupValue: selectedRange,
-                      onChanged: (value) {
+                    CheckboxListTile(                             // Testing checkboxes
+                      value: rangeVal[0], 
+                      title: Text(rangeOptions[0]),
+                      onChanged: (value){
                         setState(() {
-                          selectedRange = value;
+                          rangeVal[0] = value ?? false;
                         });
                       }
                     ),
-                    RadioListTile<String>(
-                      title: const Text("50.000 - 100.000"),
-                      value: "50.000 - 100.000", 
-                      groupValue: selectedRange,
-                      onChanged: (value) {
+                    CheckboxListTile(
+                      value: rangeVal[1], 
+                      title: Text(rangeOptions[1]),
+                      onChanged: (value){
                         setState(() {
-                          selectedRange = value;
+                          rangeVal[1] = value ?? false;
                         });
                       }
                     ),
-                    RadioListTile<String>(
-                      title: const Text("100.000 - 150.000"),
-                      value: "100.000 - 150.000", 
-                      groupValue: selectedRange,
-                      onChanged: (value) {
+                    CheckboxListTile(
+                      value: rangeVal[2], 
+                      title: Text(rangeOptions[2]),
+                      onChanged: (value){
                         setState(() {
-                          selectedRange = value;
+                          rangeVal[2] = value ?? false;
                         });
                       }
                     ),
-                    RadioListTile<String>(
-                      title: const Text("More than 150.000"),
-                      value: "More than 150.000", 
-                      groupValue: selectedRange,
-                      onChanged: (value) {
+                    CheckboxListTile(
+                      value: rangeVal[3], 
+                      title: Text(rangeOptions[3]),
+                      onChanged: (value){
                         setState(() {
-                          selectedRange = value;
+                          rangeVal[3] = value ?? false;
                         });
                       }
                     ),
@@ -334,43 +336,39 @@ class _CategoriesPageState extends State<CategoriesPage> {
                     const Padding(
                       padding: EdgeInsets.only(bottom: 8)
                     ),
-                    RadioListTile<String>(
-                      title: const Text("Makanan Berat & Nasi"),
-                      value: "Makanan Berat & Nasi", 
-                      groupValue: selectedCat,
-                      onChanged: (value) {
+                    CheckboxListTile(
+                      value: catVal[0], 
+                      title: Text(catOptions[0]),
+                      onChanged: (value){
                         setState(() {
-                          selectedCat = value;
+                          catVal[0] = value ?? false;
                         });
                       }
                     ),
-                    RadioListTile<String>(
-                      title: const Text("Olahan Ayam & Daging"),
-                      value: "Olahan Ayam & Daging", 
-                      groupValue: selectedCat,
-                      onChanged: (value) {
+                    CheckboxListTile(
+                      value: catVal[1], 
+                      title: Text(catOptions[1]),
+                      onChanged: (value){
                         setState(() {
-                          selectedCat = value;
+                          catVal[1] = value ?? false;
                         });
                       }
                     ),
-                    RadioListTile<String>(
-                      title: const Text("Mie, Pasta, & Spaghetti"),
-                      value: "Mie, Pasta, & Spaghetti", 
-                      groupValue: selectedCat,
-                      onChanged: (value) {
+                    CheckboxListTile(
+                      value: catVal[2], 
+                      title: Text(catOptions[2]),
+                      onChanged: (value){
                         setState(() {
-                          selectedCat = value;
+                          catVal[2] = value ?? false;
                         });
                       }
                     ),
-                    RadioListTile<String>(
-                      title: const Text("Makanan Ringan & Cemilan"),
-                      value: "Makanan Ringan & Cemilan", 
-                      groupValue: selectedCat,
-                      onChanged: (value) {
+                    CheckboxListTile(
+                      value: catVal[3], 
+                      title: Text(catOptions[3]),
+                      onChanged: (value){
                         setState(() {
-                          selectedCat = value;
+                          catVal[3] = value ?? false;
                         });
                       }
                     ),
@@ -389,6 +387,19 @@ class _CategoriesPageState extends State<CategoriesPage> {
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
+                selectedRange.clear();
+                selectedCat.clear();
+
+                for (int i = 0; i < rangeOptions.length; i++){
+                  if (rangeVal[i] == true){
+                    selectedRange.add(rangeOptions[i]);
+                  }
+                  
+                  if (catVal[i] == true){
+                    selectedCat.add(catOptions[i]);
+                  }
+                }
+
                 _loadProducts(
                   query: _searchController.text,
                   range: selectedRange,
