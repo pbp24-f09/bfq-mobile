@@ -30,38 +30,8 @@ class _ProductEditPageState extends State<ProductEditPage> {
   @override
   void initState() {
     super.initState();
-    _fetchProductDetails();
   }
 
-  // Fetch product details
-  Future<void> _fetchProductDetails() async {
-    var uri = Uri.parse("http://127.0.0.1:8000/product-json/${widget.productId}/");
-    try {
-      final response = await http.get(uri);
-      if (response.statusCode == 200) {
-        final List<dynamic> data = json.decode(response.body);
-        if (data.isNotEmpty) {
-          final product = data[0]['fields'];
-          setState(() {
-            _name = product['name'];
-            _price = product['price'];
-            _restaurant = product['restaurant'];
-            _location = product['location'];
-            _contact = product['contact'];
-            _category = product['cat'];
-          });
-        }
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Failed to fetch product details.")),
-        );
-      }
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Error: $e")),
-      );
-    }
-  }
 
   // Function to Pick an Image
   Future<void> _pickImage() async {
