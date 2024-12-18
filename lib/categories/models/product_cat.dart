@@ -39,7 +39,7 @@ class Fields {
     String restaurant;
     String location;
     String contact;
-    Cat cat;
+    String cat;
     String image;
 
     Fields({
@@ -60,7 +60,7 @@ class Fields {
         restaurant: json["restaurant"],
         location: json["location"],
         contact: json["contact"],
-        cat: catValues.map[json["cat"]]!,
+        cat: json["cat"],
         image: json["image"],
     );
 
@@ -71,24 +71,10 @@ class Fields {
         "restaurant": restaurant,
         "location": location,
         "contact": contact,
-        "cat": catValues.reverse[cat],
+        "cat": cat,
         "image": image,
     };
 }
-
-enum Cat {
-    MAKANAN_BERAT_NASI,
-    MAKANAN_RINGAN_CEMILAN,
-    MIE_PASTA_SPAGHETTI,
-    OLAHAN_AYAM_DAGING
-}
-
-final catValues = EnumValues({
-    "Makanan Berat & Nasi": Cat.MAKANAN_BERAT_NASI,
-    "Makanan Ringan & Cemilan": Cat.MAKANAN_RINGAN_CEMILAN,
-    "Mie, Pasta, & Spaghetti": Cat.MIE_PASTA_SPAGHETTI,
-    "Olahan Ayam & Daging": Cat.OLAHAN_AYAM_DAGING
-});
 
 enum Model {
     MAIN_PRODUCT

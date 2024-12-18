@@ -32,10 +32,14 @@ class ProductService {
       );
     }
 
-    if (response.statusCode == 200) {
-      return productEntryFromJson(response.body);
+    if (response.statusCode == 200 && response.body.isNotEmpty) {
+      try {
+        return productEntryFromJson(response.body);
+      } catch (e) {
+        throw Exception('Failed to parse products: $e');
+      }
     } else {
-      throw Exception('Failed to load products');
+      throw Exception('Failed to load products: ${response.statusCode}');
     }
   }
 }
@@ -555,7 +559,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
                       _buildDetailRow(
                         Icons.category,
                         'Categories',
-                        catValues.reverse[product.fields.cat]!,
+                        product.fields.cat,
                       ),
                       const SizedBox(height: 8),
                       _buildDetailRow(
