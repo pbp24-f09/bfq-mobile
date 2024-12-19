@@ -7,8 +7,9 @@ import 'menu_admin.dart';
 
 class ProductEditPage extends StatefulWidget {
   final String productId; // UUID sebagai string
+  final Widget previousWidget;
 
-  const ProductEditPage({super.key, required this.productId});
+  const ProductEditPage({super.key, required this.productId, required this.previousWidget});
 
   @override
   State<ProductEditPage> createState() => _ProductEditPageState();
@@ -78,10 +79,10 @@ class _ProductEditPageState extends State<ProductEditPage> {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text("Product successfully updated!")),
           );
-          // Redirect to MenuAdminPage
+          // Redirect to previous page
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => MenuAdminPage()),
+            MaterialPageRoute(builder: (context) => widget.previousWidget),
           );
         } else {
           ScaffoldMessenger.of(context).showSnackBar(

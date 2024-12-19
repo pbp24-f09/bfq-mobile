@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:bfq/main/screens/menu.dart';
 import 'package:bfq/main/screens/menu_admin.dart';
 import 'package:bfq/main/screens/menu_customer.dart';
+import 'package:bfq/categories/screens/categories_admin.dart';
+import 'package:bfq/categories/screens/categories_customer.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
 import 'package:provider/provider.dart';
 import 'package:bfq/authentication/screens/login.dart';
@@ -137,6 +139,27 @@ class LeftDrawer extends StatelessWidget {
                           builder: (context) => const ChangePasswordPage(),
                         ),
                       );
+                    },
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.search),
+                    title: const Text('Categories'),
+                    onTap: () {
+                      if (userProvider.role == 'admin'){
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const CategoriesAdminPage(),
+                          ),
+                        );
+                      } else if (userProvider.role == 'customer'){
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const CategoriesCustomerPage(),
+                          ),
+                        );
+                      }
                     },
                   ),
                   ListTile(
