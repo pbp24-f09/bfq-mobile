@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:bfq/widgets/left_drawer.dart';
 import 'package:http/http.dart' as http;
 import 'package:bfq/categories/models/product_cat.dart'; // Adjust the import path as necessary
+import 'package:bfq/main/screens/edit_form.dart';
+import 'package:bfq/main/screens/product_form.dart';
 import 'dart:convert';
 
 class ProductService {
@@ -44,14 +46,14 @@ class ProductService {
   }
 }
 
-class CategoriesPage extends StatefulWidget {
-  const CategoriesPage({super.key});
+class CategoriesAdminPage extends StatefulWidget {
+  const CategoriesAdminPage({super.key});
 
   @override
-  State<CategoriesPage> createState() => _CategoriesPageState();
+  State<CategoriesAdminPage> createState() => _CategoriesAdminPageState();
 }
 
-class _CategoriesPageState extends State<CategoriesPage> {
+class _CategoriesAdminPageState extends State<CategoriesAdminPage> {
   late Future<List<ProductEntry>> _productEntries;
   final ProductService _service = ProductService();
   final TextEditingController _searchController = TextEditingController();
@@ -76,6 +78,38 @@ class _CategoriesPageState extends State<CategoriesPage> {
     });
   }
 
+  Future<void> _deleteProduct(String productId) async {
+    var uri = Uri.parse("http://127.0.0.1:8000/delete-product/$productId"); // Endpoint delete
+
+    try {
+      final response = await http.post(uri);
+
+      if (response.statusCode == 302 || response.statusCode == 200) {
+        // Show success message
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Product successfully deleted.")),
+        );
+
+        // Refresh products display
+        Navigator.pop(context);
+        _loadProducts(
+          query: _searchController.text,
+          range: selectedRange, 
+          category: selectedCat,
+          order: priceOrder,
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Failed to delete product. Status: ${response.statusCode}")),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Error: $e")),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -91,7 +125,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
         children: [
           Padding(
             padding: const EdgeInsets.all(16.0),
-            child: TextField(
+            child: TextField(                            // Searchbar
               controller: _searchController,
               decoration: InputDecoration(
                 labelText: "Enter food or restaurant",   // use "hintText" for placeholder
@@ -137,7 +171,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
                 const Padding(
                   padding: EdgeInsets.all(8)
                 ),
-                DropdownButton(           // Price sort dropdown
+                DropdownButton(                   // Price sort dropdown
                   value: priceOrder,
                   hint: const Text("Sort Price"),
                   items: const [
@@ -161,6 +195,18 @@ class _CategoriesPageState extends State<CategoriesPage> {
                       );
                     });
                   }
+                ),
+                const Padding(
+                  padding: EdgeInsets.all(8)
+                ),
+                ElevatedButton(                         // Create Product button
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => ProductFormPage(previousWidget: widget)),
+                    );
+                  },
+                  child: const Text('Create Product'),
                 ),
               ]
             ),
@@ -272,7 +318,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
   }
 
   final List<String> rangeOptions = ["Less than 50.000", "50.000 - 100.000", "100.000 - 150.000", "More than 150.000"];
-  final List<String> catOptions = ["Makanan Berat & Nasi", "Olahan Ayam & Daging", "Mie, Pasta, & Spaghetti", "Makanan Ringan & Cemilan"];
+  final List<String> catOptions = ["Makanan Berat dan Nasi", "Olahan Ayam dan Daging", "Mie, Pasta, dan Spaghetti", "Makanan Ringan dan Cemilan"];
 
   List<bool> rangeVal = [false, false, false, false];
   List<bool> catVal = [false, false, false, false];
@@ -469,115 +515,173 @@ class _CategoriesPageState extends State<CategoriesPage> {
               color: Colors.white,
               borderRadius: BorderRadius.circular(20),
             ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.center,
+            child: Stack(
+              alignment: Alignment.center,
               children: [
-                // Close button and title section
-                Stack(
-                  alignment: Alignment.center,
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    // Title
-                    Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.fromLTRB(16, 16, 40, 16),
-                      decoration: const BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-                      ),
-                      child: Text(
-                        product.fields.name,
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF333333),
+                    // Close button and title section
+                    Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        // Title
+                        Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.fromLTRB(16, 16, 40, 16),
+                          decoration: const BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                          ),
+                          child: Text(
+                            product.fields.name,
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFF333333),
+                            ),
+                          ),
+                        ),
+                        // Close button
+                        Positioned(
+                          right: 8,
+                          top: 8,
+                          child: InkWell(
+                            onTap: () => Navigator.pop(context),
+                            child: Container(
+                              padding: const EdgeInsets.all(4),
+                              decoration: const BoxDecoration(
+                                color: Color(0xFF8B4513),
+                                shape: BoxShape.circle,
+                              ),
+                              child: const Icon(
+                                Icons.close,
+                                color: Colors.white,
+                                size: 20,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    // Product Image
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(15),
+                        child: AspectRatio(
+                          aspectRatio: 1.0, // Ensures 1:1 aspect ratio
+                          child: product.fields.image.isNotEmpty
+                              ? Image.network(
+                                  'http://127.0.0.1:8000/media/${product.fields.image}',
+                                  fit: BoxFit.cover,
+                                )
+                              : const Icon(Icons.image_not_supported, size: 100),
                         ),
                       ),
                     ),
-                    // Close button
-                    Positioned(
-                      right: 8,
-                      top: 8,
-                      child: InkWell(
-                        onTap: () => Navigator.pop(context),
-                        child: Container(
-                          padding: const EdgeInsets.all(4),
-                          decoration: const BoxDecoration(
-                            color: Color(0xFF8B4513),
-                            shape: BoxShape.circle,
+                    // Product Details
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(24, 16, 24, 20),
+                      child: Column(
+                        children: [
+                          // Price
+                          Text(
+                            "${product.fields.price} IDR",
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFF1B4332),
+                            ),
                           ),
-                          child: const Icon(
-                            Icons.close,
-                            color: Colors.white,
-                            size: 20,
+                          const SizedBox(height: 12),
+                          // Details with smaller text and icons
+                          _buildDetailRow(
+                            Icons.restaurant,
+                            'Restaurant',
+                            product.fields.restaurant,
                           ),
-                        ),
+                          const SizedBox(height: 8),
+                          _buildDetailRow(
+                            Icons.category,
+                            'Categories',
+                            product.fields.cat,
+                          ),
+                          const SizedBox(height: 8),
+                          _buildDetailRow(
+                            Icons.location_on,
+                            'Location',
+                            product.fields.location.toUpperCase(),
+                          ),
+                          const SizedBox(height: 8),
+                          _buildDetailRow(
+                            Icons.phone,
+                            'Contact',
+                            product.fields.contact,
+                          ),
+                        ],
                       ),
                     ),
                   ],
                 ),
-                // Product Image
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(15),
-                    child: AspectRatio(
-                      aspectRatio: 1.0, // Ensures 1:1 aspect ratio
-                      child: product.fields.image.isNotEmpty
-                          ? Image.network(
-                              'http://127.0.0.1:8000/media/${product.fields.image}',
-                              fit: BoxFit.cover,
-                            )
-                          : const Icon(Icons.image_not_supported, size: 100),
+                // Floating Edit Button
+                Positioned(
+                  bottom: 16,
+                  left: 16, // Adjusted positioning
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.pop(context); // Close dialog
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ProductEditPage(
+                            productId: product.pk, // Use the correct product ID
+                            previousWidget: widget,
+                          ),
+                        ),
+                      );
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: const BoxDecoration(
+                        color: Color(0xFF1B4332),
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(
+                        Icons.edit,
+                        color: Colors.white,
+                        size: 20,
+                      ),
                     ),
                   ),
                 ),
-                // Product Details
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(24, 16, 24, 20),
-                  child: Column(
-                    children: [
-                      // Price
-                      Text(
-                        "${product.fields.price} IDR",
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF1B4332),
-                        ),
+                // Floating Delete Button
+                Positioned(
+                  bottom: 16,
+                  right: 16,
+                  child: InkWell(
+                    onTap: () async {
+                      await _deleteProduct(product.pk); // Correctly pass product ID
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: const BoxDecoration(
+                        color: Colors.red, // Red color for delete
+                        shape: BoxShape.circle,
                       ),
-                      const SizedBox(height: 12),
-                      // Details with smaller text and icons
-                      _buildDetailRow(
-                        Icons.restaurant,
-                        'Restaurant',
-                        product.fields.restaurant,
+                      child: const Icon(
+                        Icons.delete,
+                        color: Colors.white,
+                        size: 20,
                       ),
-                      const SizedBox(height: 8),
-                      _buildDetailRow(
-                        Icons.category,
-                        'Categories',
-                        product.fields.cat,
-                      ),
-                      const SizedBox(height: 8),
-                      _buildDetailRow(
-                        Icons.location_on,
-                        'Location',
-                        product.fields.location.toUpperCase(),
-                      ),
-                      const SizedBox(height: 8),
-                      _buildDetailRow(
-                        Icons.phone,
-                        'Contact',
-                        product.fields.contact,
-                      ),
-                    ],
+                    ),
                   ),
                 ),
               ],
-            ),
+            )
           ),
         );
       },

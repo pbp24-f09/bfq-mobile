@@ -280,6 +280,7 @@ class _MenuAdminPageState extends State<MenuAdminPage> {
                         MaterialPageRoute(
                           builder: (context) => ProductEditPage(
                             productId: product.id, // Use the correct product ID
+                            previousWidget: widget,
                           ),
                         ),
                       );
@@ -401,7 +402,10 @@ class _MenuAdminPageState extends State<MenuAdminPage> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const ProductFormPage()),
+                  MaterialPageRoute(builder: (context) => ProductFormPage(
+                    previousWidget: widget,
+                    )
+                  ),
                 );
               },
               child: const Text('Create Product'),
