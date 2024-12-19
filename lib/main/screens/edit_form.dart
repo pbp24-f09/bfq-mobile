@@ -30,38 +30,8 @@ class _ProductEditPageState extends State<ProductEditPage> {
   @override
   void initState() {
     super.initState();
-    _fetchProductDetails();
   }
 
-  // Fetch product details
-  Future<void> _fetchProductDetails() async {
-    var uri = Uri.parse("http://127.0.0.1:8000/product-json/${widget.productId}/");
-    try {
-      final response = await http.get(uri);
-      if (response.statusCode == 200) {
-        final List<dynamic> data = json.decode(response.body);
-        if (data.isNotEmpty) {
-          final product = data[0]['fields'];
-          setState(() {
-            _name = product['name'];
-            _price = product['price'];
-            _restaurant = product['restaurant'];
-            _location = product['location'];
-            _contact = product['contact'];
-            _category = product['cat'];
-          });
-        }
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Failed to fetch product details.")),
-        );
-      }
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Error: $e")),
-      );
-    }
-  }
 
   // Function to Pick an Image
   Future<void> _pickImage() async {
@@ -128,218 +98,239 @@ class _ProductEditPageState extends State<ProductEditPage> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.primary,
       appBar: AppBar(
-        title: const Center(
-          child: Text('Edit Product'),
+      title: const Text(
+          'Edit Product',
+          style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)), // Sets the text color to black
         ),
+        backgroundColor: Color(0xFF1C3E1F), // Sets the AppBar background color to white
+        centerTitle: true,
       ),
-      body: Form(
-        key: _formKey,
+      body: Center(
         child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Name Field
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextFormField(
-                  initialValue: _name,
-                  decoration: InputDecoration(
-                    hintText: "Product Name",
-                    labelText: "Name",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5.0),
-                    ),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12.0),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black12,
+                    blurRadius: 8.0,
+                    spreadRadius: 1.0,
                   ),
-                  onChanged: (String? value) {
-                    setState(() {
-                      _name = value!;
-                    });
-                  },
-                  validator: (String? value) {
-                    if (value == null || value.isEmpty) {
-                      return "Name cannot be empty!";
-                    }
-                    return null;
-                  },
-                ),
+                ],
               ),
-              // Price Field
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextFormField(
-                  initialValue: _price.toString(),
-                  decoration: InputDecoration(
-                    hintText: "Price",
-                    labelText: "Price",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5.0),
+              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 24.0),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    // Name Field
+                    TextFormField(
+                      decoration: InputDecoration(
+                        hintText: "Product Name",
+                        labelText: "Name",
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                      ),
+                      onChanged: (String? value) {
+                        setState(() {
+                          _name = value!;
+                        });
+                      },
+                      validator: (String? value) {
+                        if (value == null || value.isEmpty) {
+                          return "Name cannot be empty!";
+                        }
+                        return null;
+                      },
                     ),
-                  ),
-                  onChanged: (String? value) {
-                    setState(() {
-                      _price = int.tryParse(value!) ?? 0;
-                    });
-                  },
-                  validator: (String? value) {
-                    if (value == null || value.isEmpty) {
-                      return "Price cannot be empty!";
-                    }
-                    if (int.tryParse(value) == null) {
-                      return "Price must be a valid number!";
-                    }
-                    return null;
-                  },
-                ),
-              ),
-              // Restaurant Field
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextFormField(
-                  decoration: InputDecoration(
-                    hintText: "Restaurant",
-                    labelText: "Restaurant",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5.0),
-                    ),
-                  ),
-                  onChanged: (String? value) {
-                    setState(() {
-                      _restaurant = value!;
-                    });
-                  },
-                  validator: (String? value) {
-                    if (value == null || value.isEmpty) {
-                      return "Restaurant cannot be empty!";
-                    }
-                    return null;
-                  },
-                ),
-              ),
-              // Location Field
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextFormField(
-                  decoration: InputDecoration(
-                    hintText: "Location",
-                    labelText: "Location",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5.0),
-                    ),
-                  ),
-                  onChanged: (String? value) {
-                    setState(() {
-                      _location = value!;
-                    });
-                  },
-                  validator: (String? value) {
-                    if (value == null || value.isEmpty) {
-                      return "Location cannot be empty!";
-                    }
-                    return null;
-                  },
-                ),
-              ),
-              // Contact Field
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextFormField(
-                  decoration: InputDecoration(
-                    hintText: "Contact",
-                    labelText: "Contact",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5.0),
-                    ),
-                  ),
-                  onChanged: (String? value) {
-                    setState(() {
-                      _contact = value!;
-                    });
-                  },
-                  validator: (String? value) {
-                    if (value == null || value.isEmpty) {
-                      return "Contact cannot be empty!";
-                    }
-                    return null;
-                  },
-                ),
-              ),
-              // Category Field with Dropdown
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: DropdownButtonFormField<String>(
-                  decoration: InputDecoration(
-                    hintText: "Category",
-                    labelText: "Category",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5.0),
-                    ),
-                  ),
-                  value: _category.isEmpty ? null : _category, // Initial value
-                  items: [
-                    'Makanan Berat dan Nasi',
-                    'Olahan Ayam dan Daging',
-                    'Mie, Pasta, dan Spaghetti',
-                    'Makanan Ringan dan Cemilan',
-                  ].map((String category) {
-                    return DropdownMenuItem<String>(
-                      value: category,
-                      child: Text(category),
-                    );
-                  }).toList(),
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      _category = newValue!;
-                    });
-                  },
-                  validator: (String? value) {
-                    if (value == null || value.isEmpty) {
-                      return "Category cannot be empty!";
-                    }
-                    return null;
-                  },
-                ),
-              ),
+                    const SizedBox(height: 16.0),
 
-              // Image Picker Button
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ElevatedButton(
-                  onPressed: _pickImage,
-                  child: const Text("Select New Image (Optional)"),
-                ),
-              ),
-
-              // Display Selected Image
-              if (_imageData != null)
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Image.memory(
-                    _imageData!,
-                    height: 150,
-                  ),
-                ),
-
-              // Submit Button
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: ElevatedButton(
-                    onPressed: _submitForm,
-                    child: const Text(
-                      "Save Changes",
-                      style: TextStyle(color: Colors.white),
+                    // Price Field
+                    TextFormField(
+                      decoration: InputDecoration(
+                        hintText: "Price",
+                        labelText: "Price",
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                      ),
+                      onChanged: (String? value) {
+                        setState(() {
+                          _price = int.tryParse(value!) ?? 0;
+                        });
+                      },
+                      validator: (String? value) {
+                        if (value == null || value.isEmpty) {
+                          return "Price cannot be empty!";
+                        }
+                        if (int.tryParse(value) == null) {
+                          return "Price must be a valid number!";
+                        }
+                        return null;
+                      },
                     ),
-                  ),
+                    const SizedBox(height: 16.0),
+
+                    // Restaurant Field
+                    TextFormField(
+                      decoration: InputDecoration(
+                        hintText: "Restaurant",
+                        labelText: "Restaurant",
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                      ),
+                      onChanged: (String? value) {
+                        setState(() {
+                          _restaurant = value!;
+                        });
+                      },
+                      validator: (String? value) {
+                        if (value == null || value.isEmpty) {
+                          return "Restaurant cannot be empty!";
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 16.0),
+
+                    // Location Field
+                    TextFormField(
+                      decoration: InputDecoration(
+                        hintText: "Location",
+                        labelText: "Location",
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                      ),
+                      onChanged: (String? value) {
+                        setState(() {
+                          _location = value!;
+                        });
+                      },
+                      validator: (String? value) {
+                        if (value == null || value.isEmpty) {
+                          return "Location cannot be empty!";
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 16.0),
+
+                    // Contact Field
+                    TextFormField(
+                      decoration: InputDecoration(
+                        hintText: "Contact",
+                        labelText: "Contact",
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                      ),
+                      onChanged: (String? value) {
+                        setState(() {
+                          _contact = value!;
+                        });
+                      },
+                      validator: (String? value) {
+                        if (value == null || value.isEmpty) {
+                          return "Contact cannot be empty!";
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 16.0),
+
+                    // Category Dropdown
+                    DropdownButtonFormField<String>(
+                      decoration: InputDecoration(
+                        hintText: "Category",
+                        labelText: "Category",
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                      ),
+                      dropdownColor: const Color(0xFF91B292), // Sets the dropdown menu background color
+                      value: _category.isEmpty ? null : _category,
+                      items: [
+                        'Makanan Berat dan Nasi',
+                        'Olahan Ayam dan Daging',
+                        'Mie, Pasta, dan Spaghetti',
+                        'Makanan Ringan dan Cemilan',
+                      ].map((String category) {
+                        return DropdownMenuItem<String>(
+                          value: category,
+                          child: Text(
+                            category,
+                            style: const TextStyle(color: Colors.black), // Sets the text color to white
+                          ),
+                        );
+                      }).toList(),
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          _category = newValue!;
+                        });
+                      },
+                      validator: (String? value) {
+                        if (value == null || value.isEmpty) {
+                          return "Category cannot be empty!";
+                        }
+                        return null;
+                      },
+                    ),
+
+                    const SizedBox(height: 16.0),
+
+                    // Image Picker Button
+                    ElevatedButton(
+                      onPressed: _pickImage,
+                      child: const Text("Select Image (Optional)"),
+                    ),
+                    const SizedBox(height: 16.0),
+
+
+                    // Display Selected Image
+                    if (_imageData != null)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 16.0),
+                        child: Image.memory(
+                          _imageData!,
+                          height: 150,
+                        ),
+                      ),
+                      const SizedBox(height: 16.0),
+
+
+                    // Submit Button
+                    ElevatedButton(
+                      onPressed: _submitForm,
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.all(12.0),
+                        backgroundColor: Color(0xFF122914), // Set the button color to green
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                      ),
+                      child: const Text(
+                        "Save",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ],
+            ),
           ),
         ),
       ),
     );
   }
+
 }
