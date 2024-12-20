@@ -184,7 +184,7 @@ class _BlogListPageState extends State<BlogListPage> {
         elevation: 0,
       ),
       drawer: const Drawer(
-        backgroundColor: Colors.white, // Set the background color here
+        backgroundColor: Colors.white,
         child: LeftDrawer(),
       ),
       body: RefreshIndicator(
@@ -307,13 +307,6 @@ class _BlogListPageState extends State<BlogListPage> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.stretch,
                                 children: [
-                                  Container(
-                                    height: 80,
-                                    decoration: BoxDecoration(
-                                      color: Colors.grey[300],
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                  ),
                                   const SizedBox(height: 8),
                                   Text(
                                     article.title,
@@ -322,7 +315,7 @@ class _BlogListPageState extends State<BlogListPage> {
                                     style: const TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 16,
-                                      color: Colors.indigo,
+                                      color: Color(0xFF4C6444),
                                     ),
                                   ),
                                   const SizedBox(height: 4),
@@ -345,61 +338,53 @@ class _BlogListPageState extends State<BlogListPage> {
                                       ),
                                     ),
                                   ),
-                                  if (article.isAuthor) ...[
-                                    const SizedBox(height: 8),
-                                    Align(
-                                      alignment: Alignment.bottomRight,
-                                      child: LayoutBuilder(
-                                        builder: (context, constraints) {
-                                          final buttonWidth =
-                                              constraints.maxWidth / 2 - 12;
-
-                                          return Wrap(
-                                            spacing: 8.0,
-                                            children: [
-                                              SizedBox(
-                                                width: buttonWidth,
-                                                child: ElevatedButton(
-                                                  onPressed: () =>
-                                                      _editArticle(article),
-                                                  style:
-                                                      ElevatedButton.styleFrom(
-                                                    backgroundColor:
-                                                        const Color(0xFFD0B799),
-                                                    padding: const EdgeInsets
-                                                        .symmetric(
-                                                        horizontal: 8.0),
-                                                  ),
-                                                  child: const Text('Edit'),
-                                                ),
+                                  const SizedBox(height: 8),
+                                  Align(
+                                    alignment: Alignment.bottomRight,
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        ElevatedButton(
+                                          onPressed: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    ArticleDetailPage(
+                                                        article: article),
                                               ),
-                                              SizedBox(
-                                                width: buttonWidth,
-                                                child: InkWell(
-                                                  onTap: () =>
-                                                      _deleteArticle(article),
-                                                  child: ElevatedButton(
-                                                    onPressed: () =>
-                                                        _deleteArticle(article),
-                                                    style: ElevatedButton
-                                                        .styleFrom(
-                                                      backgroundColor:
-                                                          const Color(
-                                                              0xFFD0B799),
-                                                      padding: const EdgeInsets
-                                                          .symmetric(
-                                                          horizontal: 8.0),
-                                                    ),
-                                                    child: const Text('Delete'),
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          );
-                                        },
-                                      ),
+                                            );
+                                          },
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor:
+                                                const Color(0xFFD0B799),
+                                          ),
+                                          child: const Text('View'),
+                                        ),
+                                        if (article.isAuthor) ...[
+                                          ElevatedButton(
+                                            onPressed: () =>
+                                                _editArticle(article),
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor:
+                                                  const Color(0xFFD0B799),
+                                            ),
+                                            child: const Text('Edit'),
+                                          ),
+                                          ElevatedButton(
+                                            onPressed: () =>
+                                                _deleteArticle(article),
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor:
+                                                  const Color(0xFFD0B799),
+                                            ),
+                                            child: const Text('Delete'),
+                                          ),
+                                        ],
+                                      ],
                                     ),
-                                  ],
+                                  ),
                                 ],
                               ),
                             ),
