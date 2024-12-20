@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:bfq/widgets/left_drawer.dart';
 import 'package:http/http.dart' as http;
 import 'package:bfq/categories/models/product_cat.dart'; // Adjust the import path as necessary
+import 'package:bfq/main/models/product.dart';
 import 'package:bfq/main/screens/edit_form.dart';
 import 'package:bfq/main/screens/product_form.dart';
 import 'dart:convert';
@@ -655,13 +656,23 @@ class _CategoriesAdminPageState extends State<CategoriesAdminPage> {
                   bottom: 16,
                   left: 16, // Adjusted positioning
                   child: InkWell(
-                    onTap: () {
+                    onTap: () {       // Convert product to main model
+                      Product convertedProduct = Product(
+                        id: product.pk, 
+                        name: product.fields.name, 
+                        price: product.fields.price, 
+                        restaurant: product.fields.restaurant, 
+                        location: product.fields.location, 
+                        contact: product.fields.contact, 
+                        category: product.fields.cat, 
+                        imageUrl: 'http://127.0.0.1:8000/media/${product.fields.image}',
+                      );
                       Navigator.pop(context); // Close dialog
                       Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) => ProductEditPage(
-                            productId: product.pk, // Use the correct product ID
+                            product: convertedProduct,
                             previousWidget: widget,
                           ),
                         ),
