@@ -32,7 +32,6 @@ class _ProductEditPageState extends State<ProductEditPage> {
     super.initState();
   }
 
-
   // Function to Pick an Image
   Future<void> _pickImage() async {
     final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
