@@ -131,8 +131,8 @@ class _CategoriesAdminPageState extends State<CategoriesAdminPage> {
             child: TextField(                            // Searchbar
               controller: _searchController,
               decoration: InputDecoration(
-                labelText: "Enter food or restaurant",   // use "hintText" for placeholder
-                labelStyle: const TextStyle(color: Colors.white),
+                hintText: "Enter food or restaurant",
+                hintStyle: const TextStyle(color: Colors.white60),
                 prefixIcon: const Icon(Icons.search, color: Colors.white),
                 focusedBorder: OutlineInputBorder(
                   borderSide: const BorderSide(color: Colors.white),
@@ -143,6 +143,7 @@ class _CategoriesAdminPageState extends State<CategoriesAdminPage> {
                   borderRadius: BorderRadius.circular(12),
                 )
               ),
+              cursorColor: Colors.white,
               style: const TextStyle(
                 color: Colors.white
               ),
@@ -159,7 +160,7 @@ class _CategoriesAdminPageState extends State<CategoriesAdminPage> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.only(left: 16, right: 16, top: 4, bottom: 25),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
@@ -170,13 +171,15 @@ class _CategoriesAdminPageState extends State<CategoriesAdminPage> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Theme.of(context).colorScheme.secondary,
                   ),
-                  child: const Icon(
-                    Icons.display_settings_rounded,
-                    color: Colors.white,
-                  ),
+                  child: Text(
+                    "Filter",
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onPrimary,
+                    ),
+                  )
                 ),
                 const Padding(
-                  padding: EdgeInsets.all(8)
+                  padding: EdgeInsets.all(10)
                 ),
                 ElevatedButton(                         // Create Product button
                   onPressed: () {
@@ -187,25 +190,17 @@ class _CategoriesAdminPageState extends State<CategoriesAdminPage> {
                   },
                   child: const Text('Create Product'),
                 ),
-                const Padding(
-                  padding: EdgeInsets.all(8)
-                ),
+                const Spacer(),
                 DropdownMenu(                   // Price sort dropdown
                   hintText: "Sort Price",
                   dropdownMenuEntries: const [
                     DropdownMenuEntry(
                       value: "Lowest",
                       label: "Lowest Price",
-                      style: ButtonStyle(
-                        foregroundColor: WidgetStatePropertyAll(Colors.white),
-                      )
                     ),
                     DropdownMenuEntry(
                       value: "Highest",
                       label: "Highest Price",
-                      style: ButtonStyle(
-                        foregroundColor: WidgetStatePropertyAll(Colors.white),
-                      )
                     ),
                   ], 
                   onSelected: (value) {
@@ -220,8 +215,35 @@ class _CategoriesAdminPageState extends State<CategoriesAdminPage> {
                     });
                   },
                   menuStyle: MenuStyle(
-                    backgroundColor: WidgetStatePropertyAll(
-                      Theme.of(context).colorScheme.secondary
+                    shape: WidgetStatePropertyAll(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      )
+                    ),
+                  ),
+                  textStyle: const TextStyle(
+                    decorationColor: Colors.white,
+                    color: Colors.white,
+                  ),
+                  
+                  inputDecorationTheme: InputDecorationTheme(
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(
+                        color: Theme.of(context).colorScheme.secondary,
+                      )
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(
+                        color: Theme.of(context).colorScheme.secondary,
+                      )
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(
+                        color: Theme.of(context).colorScheme.onPrimary,
+                      )
                     ),
                   ),
                 ),
