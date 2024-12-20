@@ -5,7 +5,9 @@ import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 
 class ProductFormPage extends StatefulWidget {
-  const ProductFormPage({super.key});
+  final Widget previousWidget;
+  
+  const ProductFormPage({super.key, required this.previousWidget});
 
   @override
   State<ProductFormPage> createState() => _ProductFormPageState();
@@ -71,7 +73,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
         );
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => MenuAdminPage()),
+          MaterialPageRoute(builder: (context) => widget.previousWidget),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
