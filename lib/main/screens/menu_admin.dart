@@ -279,7 +279,7 @@ class _MenuAdminPageState extends State<MenuAdminPage> {
                         context,
                         MaterialPageRoute(
                           builder: (context) => ProductEditPage(
-                            productId: product.id, // Use the correct product ID
+                            product: product, 
                             previousWidget: widget,
                           ),
                         ),

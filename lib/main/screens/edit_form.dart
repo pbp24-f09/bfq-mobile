@@ -4,12 +4,13 @@ import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'menu_admin.dart';
+import '../models/product.dart';
 
 class ProductEditPage extends StatefulWidget {
-  final String productId; // UUID sebagai string
   final Widget previousWidget;
+  final Product product;
 
-  const ProductEditPage({super.key, required this.productId, required this.previousWidget});
+  const ProductEditPage({super.key, required this.previousWidget, required this.product});
 
   @override
   State<ProductEditPage> createState() => _ProductEditPageState();
@@ -31,8 +32,14 @@ class _ProductEditPageState extends State<ProductEditPage> {
   @override
   void initState() {
     super.initState();
+    _name = widget.product.name;
+    _price = widget.product.price;
+    _restaurant = widget.product.restaurant;
+    _location = widget.product.location;
+    _contact = widget.product.contact;
+    _category = widget.product.category;
+    _imageData = null; // Optional: fetch and set the image if needed
   }
-
 
   // Function to Pick an Image
   Future<void> _pickImage() async {
@@ -50,7 +57,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
   // Function to Submit Form
   Future<void> _submitForm() async {
     if (_formKey.currentState!.validate()) {
-      var uri = Uri.parse("http://127.0.0.1:8000/edit-flutter/${widget.productId}");
+      var uri = Uri.parse("http://127.0.0.1:8000/edit-flutter/${widget.product.id}");
       var request = http.MultipartRequest('POST', uri);
 
       // Add form fields
@@ -140,6 +147,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
                           borderRadius: BorderRadius.circular(8.0),
                         ),
                       ),
+                      initialValue: _name,
                       onChanged: (String? value) {
                         setState(() {
                           _name = value!;
@@ -163,9 +171,10 @@ class _ProductEditPageState extends State<ProductEditPage> {
                           borderRadius: BorderRadius.circular(8.0),
                         ),
                       ),
+                      initialValue: _price != 0 ? _price.toString() : null, // Convert int to String
                       onChanged: (String? value) {
                         setState(() {
-                          _price = int.tryParse(value!) ?? 0;
+                          _price = int.tryParse(value!) ?? 0; // Parse input back to int
                         });
                       },
                       validator: (String? value) {
@@ -189,6 +198,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
                           borderRadius: BorderRadius.circular(8.0),
                         ),
                       ),
+                      initialValue: _restaurant,
                       onChanged: (String? value) {
                         setState(() {
                           _restaurant = value!;
@@ -212,6 +222,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
                           borderRadius: BorderRadius.circular(8.0),
                         ),
                       ),
+                      initialValue: _location,
                       onChanged: (String? value) {
                         setState(() {
                           _location = value!;
@@ -235,6 +246,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
                           borderRadius: BorderRadius.circular(8.0),
                         ),
                       ),
+                      initialValue: _contact,
                       onChanged: (String? value) {
                         setState(() {
                           _contact = value!;
@@ -251,15 +263,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
 
                     // Category Dropdown
                     DropdownButtonFormField<String>(
-                      decoration: InputDecoration(
-                        hintText: "Category",
-                        labelText: "Category",
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                      ),
-                      dropdownColor: const Color(0xFF91B292), // Sets the dropdown menu background color
-                      value: _category.isEmpty ? null : _category,
+                      value: _category, // Pre-fill the selected value
                       items: [
                         'Makanan Berat dan Nasi',
                         'Olahan Ayam dan Daging',
@@ -268,10 +272,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
                       ].map((String category) {
                         return DropdownMenuItem<String>(
                           value: category,
-                          child: Text(
-                            category,
-                            style: const TextStyle(color: Colors.black), // Sets the text color to white
-                          ),
+                          child: Text(category),
                         );
                       }).toList(),
                       onChanged: (String? newValue) {
