@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:bfq/widgets/left_drawer.dart';
 import 'package:http/http.dart' as http;
 import 'package:bfq/categories/models/product_cat.dart'; // Adjust the import path as necessary
+import 'package:bfq/main/models/product.dart';
 import 'package:bfq/main/screens/edit_form.dart';
 import 'package:bfq/main/screens/product_form.dart';
 import 'dart:convert';
@@ -113,7 +114,9 @@ class _CategoriesAdminPageState extends State<CategoriesAdminPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.primary,
       appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.primary,
         title: const Text(
           'Search for Foods',
           style: TextStyle(color: Colors.white)
@@ -131,13 +134,17 @@ class _CategoriesAdminPageState extends State<CategoriesAdminPage> {
                 labelText: "Enter food or restaurant",   // use "hintText" for placeholder
                 labelStyle: const TextStyle(color: Colors.white),
                 prefixIcon: const Icon(Icons.search, color: Colors.white),
-                border: OutlineInputBorder(
+                focusedBorder: OutlineInputBorder(
+                  borderSide: const BorderSide(color: Colors.white),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderSide: BorderSide(color: Theme.of(context).colorScheme.secondary),
-                  borderRadius: BorderRadius.circular(12)
+                  borderRadius: BorderRadius.circular(12),
                 )
+              ),
+              style: const TextStyle(
+                color: Colors.white
               ),
 
               onSubmitted: (value)  {
@@ -171,20 +178,37 @@ class _CategoriesAdminPageState extends State<CategoriesAdminPage> {
                 const Padding(
                   padding: EdgeInsets.all(8)
                 ),
-                DropdownButton(                   // Price sort dropdown
-                  value: priceOrder,
-                  hint: const Text("Sort Price"),
-                  items: const [
-                    DropdownMenuItem(
+                ElevatedButton(                         // Create Product button
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => ProductFormPage(previousWidget: widget)),
+                    );
+                  },
+                  child: const Text('Create Product'),
+                ),
+                const Padding(
+                  padding: EdgeInsets.all(8)
+                ),
+                DropdownMenu(                   // Price sort dropdown
+                  hintText: "Sort Price",
+                  dropdownMenuEntries: const [
+                    DropdownMenuEntry(
                       value: "Lowest",
-                      child: Text("Lowest Price"),
+                      label: "Lowest Price",
+                      style: ButtonStyle(
+                        foregroundColor: WidgetStatePropertyAll(Colors.white),
+                      )
                     ),
-                    DropdownMenuItem(
+                    DropdownMenuEntry(
                       value: "Highest",
-                      child: Text("Highest Price"),
+                      label: "Highest Price",
+                      style: ButtonStyle(
+                        foregroundColor: WidgetStatePropertyAll(Colors.white),
+                      )
                     ),
                   ], 
-                  onChanged: (value) {
+                  onSelected: (value) {
                     setState(() {
                       priceOrder = value;
                       _loadProducts(
@@ -194,19 +218,12 @@ class _CategoriesAdminPageState extends State<CategoriesAdminPage> {
                         order: priceOrder,
                       );
                     });
-                  }
-                ),
-                const Padding(
-                  padding: EdgeInsets.all(8)
-                ),
-                ElevatedButton(                         // Create Product button
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => ProductFormPage(previousWidget: widget)),
-                    );
                   },
-                  child: const Text('Create Product'),
+                  menuStyle: MenuStyle(
+                    backgroundColor: WidgetStatePropertyAll(
+                      Theme.of(context).colorScheme.secondary
+                    ),
+                  ),
                 ),
               ]
             ),
@@ -329,99 +346,54 @@ class _CategoriesAdminPageState extends State<CategoriesAdminPage> {
       builder: (BuildContext context) {
         return AlertDialog(
           backgroundColor: Theme.of(context).colorScheme.onPrimary,
-          title: const Text("What Types Are You Searching For?"),
+          title: Text(
+            "Select your Preferences",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 25,
+              fontWeight: FontWeight.w600,
+              color: Theme.of(context).colorScheme.error,
+            )
+          ),
           content: StatefulBuilder(
             builder: (BuildContext context, StateSetter setState) {
               return SingleChildScrollView(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    // Select by Price Range
                     const Padding(
-                      padding: EdgeInsets.only(top: 15)
+                      padding: EdgeInsets.only(top: 20, bottom: 12, left: 5),
+                      child: Text(
+                        "By Price Range",
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xFF2A5E30),
+                        )
+                      ),
                     ),
-                    const Text("By Price Range"),               // Select by Price Range
+                    _buildCheckBox("range", 0, setState),
+                    _buildCheckBox("range", 1, setState),
+                    _buildCheckBox("range", 2, setState),
+                    _buildCheckBox("range", 3, setState),
+                    // Select by Category
                     const Padding(
-                      padding: EdgeInsets.only(bottom: 8)
+                      padding: EdgeInsets.only(top: 25, bottom: 12, left: 5),
+                      child: Text(
+                        "By Category",
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xFF2A5E30),
+                        )
+                      ),
                     ),
-                    CheckboxListTile(                             // Testing checkboxes
-                      value: rangeVal[0], 
-                      title: Text(rangeOptions[0]),
-                      onChanged: (value){
-                        setState(() {
-                          rangeVal[0] = value ?? false;
-                        });
-                      }
-                    ),
-                    CheckboxListTile(
-                      value: rangeVal[1], 
-                      title: Text(rangeOptions[1]),
-                      onChanged: (value){
-                        setState(() {
-                          rangeVal[1] = value ?? false;
-                        });
-                      }
-                    ),
-                    CheckboxListTile(
-                      value: rangeVal[2], 
-                      title: Text(rangeOptions[2]),
-                      onChanged: (value){
-                        setState(() {
-                          rangeVal[2] = value ?? false;
-                        });
-                      }
-                    ),
-                    CheckboxListTile(
-                      value: rangeVal[3], 
-                      title: Text(rangeOptions[3]),
-                      onChanged: (value){
-                        setState(() {
-                          rangeVal[3] = value ?? false;
-                        });
-                      }
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.only(top: 15)
-                    ),
-                    const Text("By Category"),                     // Select by Category
-                    const Padding(
-                      padding: EdgeInsets.only(bottom: 8)
-                    ),
-                    CheckboxListTile(
-                      value: catVal[0], 
-                      title: Text(catOptions[0]),
-                      onChanged: (value){
-                        setState(() {
-                          catVal[0] = value ?? false;
-                        });
-                      }
-                    ),
-                    CheckboxListTile(
-                      value: catVal[1], 
-                      title: Text(catOptions[1]),
-                      onChanged: (value){
-                        setState(() {
-                          catVal[1] = value ?? false;
-                        });
-                      }
-                    ),
-                    CheckboxListTile(
-                      value: catVal[2], 
-                      title: Text(catOptions[2]),
-                      onChanged: (value){
-                        setState(() {
-                          catVal[2] = value ?? false;
-                        });
-                      }
-                    ),
-                    CheckboxListTile(
-                      value: catVal[3], 
-                      title: Text(catOptions[3]),
-                      onChanged: (value){
-                        setState(() {
-                          catVal[3] = value ?? false;
-                        });
-                      }
-                    ),
+                    _buildCheckBox("cat", 0, setState),
+                    _buildCheckBox("cat", 1, setState),
+                    _buildCheckBox("cat", 2, setState),
+                    _buildCheckBox("cat", 3, setState),
                   ],
                 )
               );
@@ -429,12 +401,35 @@ class _CategoriesAdminPageState extends State<CategoriesAdminPage> {
           ),
           actions: [
             TextButton(
+              style: ButtonStyle(
+                backgroundColor: WidgetStatePropertyAll(
+                  Theme.of(context).colorScheme.secondary,
+                ),
+              ),
+              child: Text(
+                "Cancel",
+                style: TextStyle(
+                  fontSize: 15,
+                  color: Theme.of(context).colorScheme.onPrimary,
+                ),
+              ),
               onPressed: () {
                 Navigator.of(context).pop();
               }, 
-              child: const Text("Cancel"),
             ),
             TextButton(
+              style: const ButtonStyle(
+                backgroundColor: WidgetStatePropertyAll(
+                  Color(0xFF306836)
+                ),
+              ),
+              child: Text(
+                "Filterize",
+                style: TextStyle(
+                  fontSize: 15,
+                  color: Theme.of(context).colorScheme.onPrimary,
+                ),
+              ),
               onPressed: () {
                 Navigator.of(context).pop();
                 selectedRange.clear();
@@ -443,8 +438,7 @@ class _CategoriesAdminPageState extends State<CategoriesAdminPage> {
                 for (int i = 0; i < rangeOptions.length; i++){
                   if (rangeVal[i] == true){
                     selectedRange.add(rangeOptions[i]);
-                  }
-                  
+                  } 
                   if (catVal[i] == true){
                     selectedCat.add(catOptions[i]);
                   }
@@ -457,12 +451,42 @@ class _CategoriesAdminPageState extends State<CategoriesAdminPage> {
                   order: priceOrder,
                 );
               }, 
-              child: const Text("Filterize"),
             ),
           ],
         );
       }
     );
+  }
+
+  Widget _buildCheckBox(String category, int index, StateSetter setState){
+    if (category == "range"){
+      return CheckboxListTile(
+        value: rangeVal[index], 
+        title: Text(rangeOptions[index]),
+        onChanged: (value){
+          setState(() {
+            rangeVal[index] = value ?? false;
+          });
+        },
+        controlAffinity: ListTileControlAffinity.leading,
+        activeColor: const Color(0xFF2A5E30),
+        contentPadding: const EdgeInsets.only(left: 0, right: 5),
+      ); 
+    }
+    else {
+      return CheckboxListTile(
+        value: catVal[index], 
+        title: Text(catOptions[index]),
+        onChanged: (value){
+          setState(() {
+            catVal[index] = value ?? false;
+          });
+        },
+        controlAffinity: ListTileControlAffinity.leading,
+        activeColor: const Color(0xFF2A5E30),
+        contentPadding: const EdgeInsets.only(left: 0, right: 5),
+      );
+    }
   } 
 
   Widget _buildDetailRow(IconData icon, String label, String value) {
@@ -632,13 +656,23 @@ class _CategoriesAdminPageState extends State<CategoriesAdminPage> {
                   bottom: 16,
                   left: 16, // Adjusted positioning
                   child: InkWell(
-                    onTap: () {
+                    onTap: () {       // Convert product to main model
+                      Product convertedProduct = Product(
+                        id: product.pk, 
+                        name: product.fields.name, 
+                        price: product.fields.price, 
+                        restaurant: product.fields.restaurant, 
+                        location: product.fields.location, 
+                        contact: product.fields.contact, 
+                        category: product.fields.cat, 
+                        imageUrl: 'http://127.0.0.1:8000/media/${product.fields.image}',
+                      );
                       Navigator.pop(context); // Close dialog
                       Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) => ProductEditPage(
-                            productId: product.pk, // Use the correct product ID
+                            product: convertedProduct,
                             previousWidget: widget,
                           ),
                         ),
