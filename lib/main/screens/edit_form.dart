@@ -263,7 +263,15 @@ class _ProductEditPageState extends State<ProductEditPage> {
 
                     // Category Dropdown
                     DropdownButtonFormField<String>(
-                      value: _category, // Pre-fill the selected value
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Colors.white, // Light green color for the field background
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8.0), // Rounded border
+                          borderSide: BorderSide.none, // No border
+                        ),
+                      ),
+                      dropdownColor: Colors.lightGreen[100], // Light green for the dropdown menu background
                       items: [
                         'Makanan Berat dan Nasi',
                         'Olahan Ayam dan Daging',
