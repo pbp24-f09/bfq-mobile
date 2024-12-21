@@ -38,7 +38,9 @@ class _CategoriesCustomerPageState extends State<CategoriesCustomerPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.primary,
       appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.primary,
         title: const Text(
           'Search for Foods',
           style: TextStyle(color: Colors.white)
@@ -53,16 +55,21 @@ class _CategoriesCustomerPageState extends State<CategoriesCustomerPage> {
             child: TextField(                            // Searchbar
               controller: _searchController,
               decoration: InputDecoration(
-                labelText: "Enter food or restaurant",   // use "hintText" for placeholder
-                labelStyle: const TextStyle(color: Colors.white),
+                hintText: "Enter food or restaurant",
+                hintStyle: const TextStyle(color: Colors.white60),
                 prefixIcon: const Icon(Icons.search, color: Colors.white),
-                border: OutlineInputBorder(
+                focusedBorder: OutlineInputBorder(
+                  borderSide: const BorderSide(color: Colors.white),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderSide: BorderSide(color: Theme.of(context).colorScheme.secondary),
-                  borderRadius: BorderRadius.circular(12)
+                  borderRadius: BorderRadius.circular(12),
                 )
+              ),
+              cursorColor: Colors.white,
+              style: const TextStyle(
+                color: Colors.white
               ),
 
               onSubmitted: (value)  {
@@ -77,7 +84,7 @@ class _CategoriesCustomerPageState extends State<CategoriesCustomerPage> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.only(left: 16, right: 16, top: 4, bottom: 25),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
@@ -88,28 +95,27 @@ class _CategoriesCustomerPageState extends State<CategoriesCustomerPage> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Theme.of(context).colorScheme.secondary,
                   ),
-                  child: const Icon(
-                    Icons.display_settings_rounded,
-                    color: Colors.white,
-                  ),
-                ),
-                const Padding(
-                  padding: EdgeInsets.all(8)
-                ),
-                DropdownButton(                   // Price sort dropdown
-                  value: priceOrder,
-                  hint: const Text("Sort Price"),
-                  items: const [
-                    DropdownMenuItem(
-                      value: "Lowest",
-                      child: Text("Lowest Price"),
+                  child: Text(
+                    "Filter",
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onPrimary,
                     ),
-                    DropdownMenuItem(
+                  )
+                ),
+                const Spacer(),
+                DropdownMenu(                   // Price sort dropdown
+                  hintText: "Sort Price",
+                  dropdownMenuEntries: const [
+                    DropdownMenuEntry(
+                      value: "Lowest",
+                      label: "Lowest Price",
+                    ),
+                    DropdownMenuEntry(
                       value: "Highest",
-                      child: Text("Highest Price"),
+                      label: "Highest Price",
                     ),
                   ], 
-                  onChanged: (value) {
+                  onSelected: (value) {
                     setState(() {
                       priceOrder = value;
                       _loadProducts(
@@ -119,7 +125,39 @@ class _CategoriesCustomerPageState extends State<CategoriesCustomerPage> {
                         order: priceOrder,
                       );
                     });
-                  }
+                  },
+                  menuStyle: MenuStyle(
+                    shape: WidgetStatePropertyAll(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      )
+                    ),
+                  ),
+                  textStyle: const TextStyle(
+                    decorationColor: Colors.white,
+                    color: Colors.white,
+                  ),
+                  
+                  inputDecorationTheme: InputDecorationTheme(
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(
+                        color: Theme.of(context).colorScheme.secondary,
+                      )
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(
+                        color: Theme.of(context).colorScheme.secondary,
+                      )
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(
+                        color: Theme.of(context).colorScheme.onPrimary,
+                      )
+                    ),
+                  ),
                 ),
               ]
             ),
@@ -168,7 +206,7 @@ class _CategoriesCustomerPageState extends State<CategoriesCustomerPage> {
                                       image: product.fields.image.isNotEmpty
                                           ? DecorationImage(
                                               image: NetworkImage(
-                                                'http://127.0.0.1:8000/media/${product.fields.image}'
+                                                'https://redundant-raychel-bfq-f4b73b50.koyeb.app/media/${product.fields.image}'
                                               ),
                                               fit: BoxFit.cover,
                                             )
@@ -242,99 +280,54 @@ class _CategoriesCustomerPageState extends State<CategoriesCustomerPage> {
       builder: (BuildContext context) {
         return AlertDialog(
           backgroundColor: Theme.of(context).colorScheme.onPrimary,
-          title: const Text("What Types Are You Searching For?"),
+          title: Text(
+            "Select your Preferences",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 25,
+              fontWeight: FontWeight.w600,
+              color: Theme.of(context).colorScheme.error,
+            )
+          ),
           content: StatefulBuilder(
             builder: (BuildContext context, StateSetter setState) {
               return SingleChildScrollView(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    // Select by Price Range
                     const Padding(
-                      padding: EdgeInsets.only(top: 15)
+                      padding: EdgeInsets.only(top: 20, bottom: 12, left: 5),
+                      child: Text(
+                        "By Price Range",
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xFF2A5E30),
+                        )
+                      ),
                     ),
-                    const Text("By Price Range"),               // Select by Price Range
+                    _buildCheckBox("range", 0, setState),
+                    _buildCheckBox("range", 1, setState),
+                    _buildCheckBox("range", 2, setState),
+                    _buildCheckBox("range", 3, setState),
+                    // Select by Category
                     const Padding(
-                      padding: EdgeInsets.only(bottom: 8)
+                      padding: EdgeInsets.only(top: 25, bottom: 12, left: 5),
+                      child: Text(
+                        "By Category",
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xFF2A5E30),
+                        )
+                      ),
                     ),
-                    CheckboxListTile(                             // Testing checkboxes
-                      value: rangeVal[0], 
-                      title: Text(rangeOptions[0]),
-                      onChanged: (value){
-                        setState(() {
-                          rangeVal[0] = value ?? false;
-                        });
-                      }
-                    ),
-                    CheckboxListTile(
-                      value: rangeVal[1], 
-                      title: Text(rangeOptions[1]),
-                      onChanged: (value){
-                        setState(() {
-                          rangeVal[1] = value ?? false;
-                        });
-                      }
-                    ),
-                    CheckboxListTile(
-                      value: rangeVal[2], 
-                      title: Text(rangeOptions[2]),
-                      onChanged: (value){
-                        setState(() {
-                          rangeVal[2] = value ?? false;
-                        });
-                      }
-                    ),
-                    CheckboxListTile(
-                      value: rangeVal[3], 
-                      title: Text(rangeOptions[3]),
-                      onChanged: (value){
-                        setState(() {
-                          rangeVal[3] = value ?? false;
-                        });
-                      }
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.only(top: 15)
-                    ),
-                    const Text("By Category"),                     // Select by Category
-                    const Padding(
-                      padding: EdgeInsets.only(bottom: 8)
-                    ),
-                    CheckboxListTile(
-                      value: catVal[0], 
-                      title: Text(catOptions[0]),
-                      onChanged: (value){
-                        setState(() {
-                          catVal[0] = value ?? false;
-                        });
-                      }
-                    ),
-                    CheckboxListTile(
-                      value: catVal[1], 
-                      title: Text(catOptions[1]),
-                      onChanged: (value){
-                        setState(() {
-                          catVal[1] = value ?? false;
-                        });
-                      }
-                    ),
-                    CheckboxListTile(
-                      value: catVal[2], 
-                      title: Text(catOptions[2]),
-                      onChanged: (value){
-                        setState(() {
-                          catVal[2] = value ?? false;
-                        });
-                      }
-                    ),
-                    CheckboxListTile(
-                      value: catVal[3], 
-                      title: Text(catOptions[3]),
-                      onChanged: (value){
-                        setState(() {
-                          catVal[3] = value ?? false;
-                        });
-                      }
-                    ),
+                    _buildCheckBox("cat", 0, setState),
+                    _buildCheckBox("cat", 1, setState),
+                    _buildCheckBox("cat", 2, setState),
+                    _buildCheckBox("cat", 3, setState),
                   ],
                 )
               );
@@ -342,12 +335,35 @@ class _CategoriesCustomerPageState extends State<CategoriesCustomerPage> {
           ),
           actions: [
             TextButton(
+              style: ButtonStyle(
+                backgroundColor: WidgetStatePropertyAll(
+                  Theme.of(context).colorScheme.secondary,
+                ),
+              ),
+              child: Text(
+                "Cancel",
+                style: TextStyle(
+                  fontSize: 15,
+                  color: Theme.of(context).colorScheme.onPrimary,
+                ),
+              ),
               onPressed: () {
                 Navigator.of(context).pop();
               }, 
-              child: const Text("Cancel"),
             ),
             TextButton(
+              style: const ButtonStyle(
+                backgroundColor: WidgetStatePropertyAll(
+                  Color(0xFF306836)
+                ),
+              ),
+              child: Text(
+                "Filterize",
+                style: TextStyle(
+                  fontSize: 15,
+                  color: Theme.of(context).colorScheme.onPrimary,
+                ),
+              ),
               onPressed: () {
                 Navigator.of(context).pop();
                 selectedRange.clear();
@@ -356,8 +372,7 @@ class _CategoriesCustomerPageState extends State<CategoriesCustomerPage> {
                 for (int i = 0; i < rangeOptions.length; i++){
                   if (rangeVal[i] == true){
                     selectedRange.add(rangeOptions[i]);
-                  }
-                  
+                  } 
                   if (catVal[i] == true){
                     selectedCat.add(catOptions[i]);
                   }
@@ -370,12 +385,42 @@ class _CategoriesCustomerPageState extends State<CategoriesCustomerPage> {
                   order: priceOrder,
                 );
               }, 
-              child: const Text("Filterize"),
             ),
           ],
         );
       }
     );
+  }
+
+  Widget _buildCheckBox(String category, int index, StateSetter setState){
+    if (category == "range"){
+      return CheckboxListTile(
+        value: rangeVal[index], 
+        title: Text(rangeOptions[index]),
+        onChanged: (value){
+          setState(() {
+            rangeVal[index] = value ?? false;
+          });
+        },
+        controlAffinity: ListTileControlAffinity.leading,
+        activeColor: const Color(0xFF2A5E30),
+        contentPadding: const EdgeInsets.only(left: 0, right: 5),
+      ); 
+    }
+    else {
+      return CheckboxListTile(
+        value: catVal[index], 
+        title: Text(catOptions[index]),
+        onChanged: (value){
+          setState(() {
+            catVal[index] = value ?? false;
+          });
+        },
+        controlAffinity: ListTileControlAffinity.leading,
+        activeColor: const Color(0xFF2A5E30),
+        contentPadding: const EdgeInsets.only(left: 0, right: 5),
+      );
+    }
   } 
 
   Widget _buildDetailRow(IconData icon, String label, String value) {
@@ -488,7 +533,7 @@ class _CategoriesCustomerPageState extends State<CategoriesCustomerPage> {
                           aspectRatio: 1.0, // Ensures 1:1 aspect ratio
                           child: product.fields.image.isNotEmpty
                               ? Image.network(
-                                  'http://127.0.0.1:8000/media/${product.fields.image}',
+                                  'https://redundant-raychel-bfq-f4b73b50.koyeb.app/media/${product.fields.image}',
                                   fit: BoxFit.cover,
                                 )
                               : const Icon(Icons.image_not_supported, size: 100),

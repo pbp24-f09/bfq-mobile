@@ -18,11 +18,11 @@ class ProductService {
     final dynamic uri;
     final dynamic response;
     if (query == null && range == null && category == null){
-      uri = Uri.parse('http://127.0.0.1:8000/json/');
+      uri = Uri.parse('https://redundant-raychel-bfq-f4b73b50.koyeb.app/json/');
       response = await http.get(uri);
 
     } else {
-      uri = Uri.parse('http://127.0.0.1:8000/search-filter/');
+      uri = Uri.parse('https://redundant-raychel-bfq-f4b73b50.koyeb.app/search-filter/');
       response = await http.post(
         uri,
         body: jsonEncode({
@@ -80,7 +80,7 @@ class _CategoriesAdminPageState extends State<CategoriesAdminPage> {
   }
 
   Future<void> _deleteProduct(String productId) async {
-    var uri = Uri.parse("http://127.0.0.1:8000/delete-product/$productId"); // Endpoint delete
+    var uri = Uri.parse("https://redundant-raychel-bfq-f4b73b50.koyeb.app/delete-product/$productId"); // Endpoint delete
 
     try {
       final response = await http.post(uri);
@@ -131,8 +131,8 @@ class _CategoriesAdminPageState extends State<CategoriesAdminPage> {
             child: TextField(                            // Searchbar
               controller: _searchController,
               decoration: InputDecoration(
-                labelText: "Enter food or restaurant",   // use "hintText" for placeholder
-                labelStyle: const TextStyle(color: Colors.white),
+                hintText: "Enter food or restaurant",
+                hintStyle: const TextStyle(color: Colors.white60),
                 prefixIcon: const Icon(Icons.search, color: Colors.white),
                 focusedBorder: OutlineInputBorder(
                   borderSide: const BorderSide(color: Colors.white),
@@ -143,6 +143,7 @@ class _CategoriesAdminPageState extends State<CategoriesAdminPage> {
                   borderRadius: BorderRadius.circular(12),
                 )
               ),
+              cursorColor: Colors.white,
               style: const TextStyle(
                 color: Colors.white
               ),
@@ -159,7 +160,7 @@ class _CategoriesAdminPageState extends State<CategoriesAdminPage> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.only(left: 16, right: 16, top: 4, bottom: 25),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
@@ -170,13 +171,15 @@ class _CategoriesAdminPageState extends State<CategoriesAdminPage> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Theme.of(context).colorScheme.secondary,
                   ),
-                  child: const Icon(
-                    Icons.display_settings_rounded,
-                    color: Colors.white,
-                  ),
+                  child: Text(
+                    "Filter",
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onPrimary,
+                    ),
+                  )
                 ),
                 const Padding(
-                  padding: EdgeInsets.all(8)
+                  padding: EdgeInsets.all(10)
                 ),
                 ElevatedButton(                         // Create Product button
                   onPressed: () {
@@ -187,25 +190,17 @@ class _CategoriesAdminPageState extends State<CategoriesAdminPage> {
                   },
                   child: const Text('Create Product'),
                 ),
-                const Padding(
-                  padding: EdgeInsets.all(8)
-                ),
+                const Spacer(),
                 DropdownMenu(                   // Price sort dropdown
                   hintText: "Sort Price",
                   dropdownMenuEntries: const [
                     DropdownMenuEntry(
                       value: "Lowest",
                       label: "Lowest Price",
-                      style: ButtonStyle(
-                        foregroundColor: WidgetStatePropertyAll(Colors.white),
-                      )
                     ),
                     DropdownMenuEntry(
                       value: "Highest",
                       label: "Highest Price",
-                      style: ButtonStyle(
-                        foregroundColor: WidgetStatePropertyAll(Colors.white),
-                      )
                     ),
                   ], 
                   onSelected: (value) {
@@ -220,8 +215,35 @@ class _CategoriesAdminPageState extends State<CategoriesAdminPage> {
                     });
                   },
                   menuStyle: MenuStyle(
-                    backgroundColor: WidgetStatePropertyAll(
-                      Theme.of(context).colorScheme.secondary
+                    shape: WidgetStatePropertyAll(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      )
+                    ),
+                  ),
+                  textStyle: const TextStyle(
+                    decorationColor: Colors.white,
+                    color: Colors.white,
+                  ),
+                  
+                  inputDecorationTheme: InputDecorationTheme(
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(
+                        color: Theme.of(context).colorScheme.secondary,
+                      )
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(
+                        color: Theme.of(context).colorScheme.secondary,
+                      )
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(
+                        color: Theme.of(context).colorScheme.onPrimary,
+                      )
                     ),
                   ),
                 ),
@@ -272,7 +294,7 @@ class _CategoriesAdminPageState extends State<CategoriesAdminPage> {
                                       image: product.fields.image.isNotEmpty
                                           ? DecorationImage(
                                               image: NetworkImage(
-                                                'http://127.0.0.1:8000/media/${product.fields.image}'
+                                                'https://redundant-raychel-bfq-f4b73b50.koyeb.app/media/${product.fields.image}'
                                               ),
                                               fit: BoxFit.cover,
                                             )
@@ -599,7 +621,7 @@ class _CategoriesAdminPageState extends State<CategoriesAdminPage> {
                           aspectRatio: 1.0, // Ensures 1:1 aspect ratio
                           child: product.fields.image.isNotEmpty
                               ? Image.network(
-                                  'http://127.0.0.1:8000/media/${product.fields.image}',
+                                  'https://redundant-raychel-bfq-f4b73b50.koyeb.app/media/${product.fields.image}',
                                   fit: BoxFit.cover,
                                 )
                               : const Icon(Icons.image_not_supported, size: 100),
@@ -665,7 +687,7 @@ class _CategoriesAdminPageState extends State<CategoriesAdminPage> {
                         location: product.fields.location, 
                         contact: product.fields.contact, 
                         category: product.fields.cat, 
-                        imageUrl: 'http://127.0.0.1:8000/media/${product.fields.image}',
+                        imageUrl: 'https://redundant-raychel-bfq-f4b73b50.koyeb.app/media/${product.fields.image}',
                       );
                       Navigator.pop(context); // Close dialog
                       Navigator.push(
