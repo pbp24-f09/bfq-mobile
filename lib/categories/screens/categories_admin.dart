@@ -294,7 +294,7 @@ class _CategoriesAdminPageState extends State<CategoriesAdminPage> {
                                       image: product.fields.image.isNotEmpty
                                           ? DecorationImage(
                                               image: NetworkImage(
-                                                'http://127.0.0.1:8000/media/${product.fields.image}'
+                                                'https://redundant-raychel-bfq-f4b73b50.koyeb.app/media/${product.fields.image}'
                                               ),
                                               fit: BoxFit.cover,
                                             )
@@ -621,7 +621,7 @@ class _CategoriesAdminPageState extends State<CategoriesAdminPage> {
                           aspectRatio: 1.0, // Ensures 1:1 aspect ratio
                           child: product.fields.image.isNotEmpty
                               ? Image.network(
-                                  'http://127.0.0.1:8000/media/${product.fields.image}',
+                                  'https://redundant-raychel-bfq-f4b73b50.koyeb.app/media/${product.fields.image}',
                                   fit: BoxFit.cover,
                                 )
                               : const Icon(Icons.image_not_supported, size: 100),
@@ -687,7 +687,7 @@ class _CategoriesAdminPageState extends State<CategoriesAdminPage> {
                         location: product.fields.location, 
                         contact: product.fields.contact, 
                         category: product.fields.cat, 
-                        imageUrl: 'http://127.0.0.1:8000/media/${product.fields.image}',
+                        imageUrl: 'https://redundant-raychel-bfq-f4b73b50.koyeb.app/media/${product.fields.image}',
                       );
                       Navigator.pop(context); // Close dialog
                       Navigator.push(

@@ -22,7 +22,7 @@ class Product {
   /// Factory constructor to parse JSON
   factory Product.fromJson(Map<String, dynamic> json) {
     final fields = json['fields'];
-    const String mediaBaseUrl = 'http://127.0.0.1:8000/media/'; // Base URL for media files
+    const String mediaBaseUrl = 'https://redundant-raychel-bfq-f4b73b50.koyeb.app/media/'; // Base URL for media files
     return Product(
       id: json['pk'].toString(),
       name: fields['name'],
@@ -47,7 +47,7 @@ class Product {
         "location": location,
         "contact": contact,
         "cat": category,
-        "image": imageUrl.replaceFirst('http://127.0.0.1:8000/media/', ''), // Convert back to relative path
+        "image": imageUrl.replaceFirst('https://redundant-raychel-bfq-f4b73b50.koyeb.app/media/', ''), // Convert back to relative path
       },
     };
   }
