@@ -18,11 +18,11 @@ class ProductService {
     final dynamic uri;
     final dynamic response;
     if (query == null && range == null && category == null){
-      uri = Uri.parse('http://127.0.0.1:8000/json/');
+      uri = Uri.parse('https://redundant-raychel-bfq-f4b73b50.koyeb.app/json/');
       response = await http.get(uri);
 
     } else {
-      uri = Uri.parse('http://127.0.0.1:8000/search-filter/');
+      uri = Uri.parse('https://redundant-raychel-bfq-f4b73b50.koyeb.app/search-filter/');
       response = await http.post(
         uri,
         body: jsonEncode({
@@ -80,7 +80,7 @@ class _CategoriesAdminPageState extends State<CategoriesAdminPage> {
   }
 
   Future<void> _deleteProduct(String productId) async {
-    var uri = Uri.parse("http://127.0.0.1:8000/delete-product/$productId"); // Endpoint delete
+    var uri = Uri.parse("https://redundant-raychel-bfq-f4b73b50.koyeb.app/delete-product/$productId"); // Endpoint delete
 
     try {
       final response = await http.post(uri);
