@@ -189,7 +189,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.red,
                             padding: const EdgeInsets.symmetric(
-                                horizontal: 24, vertical: 12),
+                                horizontal: 20, vertical: 10),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10),
                             ),
@@ -203,7 +203,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xFFB48125),
                             padding: const EdgeInsets.symmetric(
-                                horizontal: 24, vertical: 12),
+                                horizontal: 20, vertical: 10),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10),
                             ),
@@ -287,7 +287,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
             children: [
               const Text(
                 'Are you sure you want to delete your account? This action cannot be undone.',
-                style: TextStyle(fontSize: 14),
+                style: TextStyle(fontSize: 12),
               ),
               const SizedBox(height: 16),
               TextField(
@@ -463,7 +463,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                     Text(
                                       profileData!['full_name'] + "'s Profile",
                                       style: const TextStyle(
-                                        fontSize: 24,
+                                        fontSize: 18,
                                         fontWeight: FontWeight.bold,
                                         color: Color(0xFFB48125),
                                       ),
@@ -524,7 +524,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
             child: Text(
               "$label:",
               style: const TextStyle(
-                fontSize: 16,
+                fontSize: 12,
                 fontWeight: FontWeight.bold,
                 color: Color(0xFFB48125),
               ),
@@ -535,7 +535,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
             child: Text(
               value,
               style: const TextStyle(
-                fontSize: 16,
+                fontSize: 12,
                 color: Colors.black,
               ),
             ),
