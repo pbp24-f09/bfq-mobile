@@ -179,7 +179,7 @@ class _BlogFormPageState extends State<BlogFormPage> {
                         if (_isEditing) {
                           // Edit existing article
                           final response = await request.postJson(
-                            "http://127.0.0.1:8000/blog/edit-article-flutter/${widget.article!.id}/",
+                            "https://redundant-raychel-bfq-f4b73b50.koyeb.app/blog/edit-article-flutter/${widget.article!.id}/",
                             jsonEncode(<String, String>{
                               'title': _title,
                               'topic': _topic,
@@ -206,7 +206,7 @@ class _BlogFormPageState extends State<BlogFormPage> {
                         } else {
                           // Create new article
                           final response = await request.postJson(
-                            "http://127.0.0.1:8000/blog/create-article-flutter/",
+                            "https://redundant-raychel-bfq-f4b73b50.koyeb.app/blog/create-article-flutter/",
                             jsonEncode(<String, String>{
                               'title': _title,
                               'topic': _topic,

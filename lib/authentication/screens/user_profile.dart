@@ -32,7 +32,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
     try {
       final request = context.read<CookieRequest>();
       final response =
-          await request.get('http://127.0.0.1:8000/profile-flutter/');
+          await request.get('https://redundant-raychel-bfq-f4b73b50.koyeb.app/profile-flutter/');
       if (response.containsKey('username') &&
           response.containsKey('full_name') &&
           response.containsKey('email')) {
@@ -62,7 +62,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
     // Fetch current photo URL
     void _fetchCurrentPhoto() async {
       final response =
-          await request.get('http://127.0.0.1:8000/profile-flutter/');
+          await request.get('https://redundant-raychel-bfq-f4b73b50.koyeb.app/profile-flutter/');
       if (response.containsKey('profile_photo')) {
         _photoUrlController.text = response['profile_photo'] ?? '';
       }
@@ -73,7 +73,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
       try {
         setState(() => isLoading = true);
         final response = await request.postJson(
-          'http://127.0.0.1:8000/update-photo-flutter/',
+          'https://redundant-raychel-bfq-f4b73b50.koyeb.app/update-photo-flutter/',
           jsonEncode(<String, String>{
             'photo_url': photoUrl,
           }),
@@ -119,7 +119,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
       try {
         setState(() => isLoading = true);
         final response = await request.postJson(
-          'http://127.0.0.1:8000/delete-photo-flutter/',
+          'https://redundant-raychel-bfq-f4b73b50.koyeb.app/delete-photo-flutter/',
           jsonEncode({}),
         );
 
@@ -231,7 +231,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
       try {
         setState(() => isLoading = true);
         final response = await request.postJson(
-          'http://127.0.0.1:8000/delete-account-flutter/',
+          'https://redundant-raychel-bfq-f4b73b50.koyeb.app/delete-account-flutter/',
           jsonEncode(<String, String>{
             'username': _usernameController.text,
             'password': _passwordController.text,

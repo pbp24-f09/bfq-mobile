@@ -21,7 +21,7 @@ class _BlogListPageState extends State<BlogListPage> {
 
   Future<List<Article>> fetchArticles(CookieRequest request) async {
     final response =
-        await request.get('http://127.0.0.1:8000/blog/get-articles/');
+        await request.get('https://redundant-raychel-bfq-f4b73b50.koyeb.app/blog/get-articles/');
     final blogEntry = BlogEntry.fromJson(response);
     return blogEntry.articles;
   }
@@ -138,7 +138,7 @@ class _BlogListPageState extends State<BlogListPage> {
   void _deleteArticle(Article article) async {
     final request = Provider.of<CookieRequest>(context, listen: false);
     final deleteUrl =
-        'http://127.0.0.1:8000/blog/delete-article-flutter/${article.id}/';
+        'https://redundant-raychel-bfq-f4b73b50.koyeb.app/blog/delete-article-flutter/${article.id}/';
 
     try {
       final response = await request.post(deleteUrl, {});

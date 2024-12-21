@@ -84,7 +84,7 @@ class _LoginPageState extends State<LoginPage> {
               }
 
               final response = await request.login(
-                "http://127.0.0.1:8000/login-flutter/",
+                "https://redundant-raychel-bfq-f4b73b50.koyeb.app/login-flutter/",
                 {
                   'username': username,
                   'password': password,

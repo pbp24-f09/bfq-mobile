@@ -28,7 +28,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
         isLoading = true;
       });
       final response = await request.postJson(
-        "http://127.0.0.1:8000/change-password-flutter/",
+        "https://redundant-raychel-bfq-f4b73b50.koyeb.app/change-password-flutter/",
         jsonEncode(<String, String>{
           "old_password": _currentPasswordController.text,
           "new_password": _newPasswordController.text,

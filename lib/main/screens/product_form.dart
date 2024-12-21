@@ -42,7 +42,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
   // Function to Submit Form
   Future<void> _submitForm() async {
   if (_formKey.currentState!.validate() && _pickedFile != null) {
-    var uri = Uri.parse("http://127.0.0.1:8000/create-flutter/");
+    var uri = Uri.parse("https://redundant-raychel-bfq-f4b73b50.koyeb.app/create-flutter/");
     var request = http.MultipartRequest('POST', uri);
 
     // Add form fields
