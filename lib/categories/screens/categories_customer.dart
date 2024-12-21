@@ -206,7 +206,7 @@ class _CategoriesCustomerPageState extends State<CategoriesCustomerPage> {
                                       image: product.fields.image.isNotEmpty
                                           ? DecorationImage(
                                               image: NetworkImage(
-                                                'http://127.0.0.1:8000/media/${product.fields.image}'
+                                                'https://redundant-raychel-bfq-f4b73b50.koyeb.app/media/${product.fields.image}'
                                               ),
                                               fit: BoxFit.cover,
                                             )
@@ -533,7 +533,7 @@ class _CategoriesCustomerPageState extends State<CategoriesCustomerPage> {
                           aspectRatio: 1.0, // Ensures 1:1 aspect ratio
                           child: product.fields.image.isNotEmpty
                               ? Image.network(
-                                  'http://127.0.0.1:8000/media/${product.fields.image}',
+                                  'https://redundant-raychel-bfq-f4b73b50.koyeb.app/media/${product.fields.image}',
                                   fit: BoxFit.cover,
                                 )
                               : const Icon(Icons.image_not_supported, size: 100),
