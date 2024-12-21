@@ -33,7 +33,7 @@ class _UserProfileEditPageState extends State<UserProfileEditPage> {
     try {
       final request = context.read<CookieRequest>();
       final response =
-          await request.get('http://127.0.0.1:8000/profile-flutter/');
+          await request.get('https://redundant-raychel-bfq-f4b73b50.koyeb.app/profile-flutter/');
 
       if (response.containsKey('full_name') && response.containsKey('email')) {
         setState(() {
@@ -64,7 +64,7 @@ class _UserProfileEditPageState extends State<UserProfileEditPage> {
     try {
       final request = context.read<CookieRequest>();
       final response = await request.postJson(
-        "http://127.0.0.1:8000/update-profile-flutter/",
+        "https://redundant-raychel-bfq-f4b73b50.koyeb.app/update-profile-flutter/",
         jsonEncode(<String, String>{
           'full_name': _fullNameController.text,
           'email': _emailController.text,

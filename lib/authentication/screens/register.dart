@@ -188,7 +188,7 @@ class _RegisterPageState extends State<RegisterPage> {
               onPressed: () async {
                 if (_formKey.currentState!.validate()) {
                   final response = await request.postJson(
-                    "http://127.0.0.1:8000/register-flutter/",
+                    "https://redundant-raychel-bfq-f4b73b50.koyeb.app/register-flutter/",
                     jsonEncode({
                       "username": _usernameController.text,
                       "password": _passwordController.text,

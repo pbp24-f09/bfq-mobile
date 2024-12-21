@@ -35,7 +35,7 @@ class _MenuAdminPageState extends State<MenuAdminPage> {
   
 
   Future<void> _deleteProduct(String productId) async {
-    var uri = Uri.parse("http://127.0.0.1:8000/delete-product/$productId"); // Endpoint delete
+    var uri = Uri.parse("https://redundant-raychel-bfq-f4b73b50.koyeb.app/delete-product/$productId"); // Endpoint delete
 
     try {
       final response = await http.post(uri);

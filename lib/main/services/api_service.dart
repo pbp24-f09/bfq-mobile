@@ -4,7 +4,7 @@ import '../models/product.dart';
 
 class ApiService {
   static Future<List<Product>> fetchProducts() async {
-    final response = await http.get(Uri.parse('http://127.0.0.1:8000/api/products/'));
+    final response = await http.get(Uri.parse('https://redundant-raychel-bfq-f4b73b50.koyeb.app/api/products/'));
 
     if (response.statusCode == 200) {
       final dynamic jsonBody = jsonDecode(response.body);

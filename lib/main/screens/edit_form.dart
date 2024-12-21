@@ -57,7 +57,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
   // Function to Submit Form
   Future<void> _submitForm() async {
     if (_formKey.currentState!.validate()) {
-      var uri = Uri.parse("http://127.0.0.1:8000/edit-flutter/${widget.product.id}");
+      var uri = Uri.parse("https://redundant-raychel-bfq-f4b73b50.koyeb.app/edit-flutter/${widget.product.id}");
       var request = http.MultipartRequest('POST', uri);
 
       // Add form fields
