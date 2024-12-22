@@ -414,8 +414,8 @@ class _MenuPageState extends State<MenuPage> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               SizedBox(
-                                width: 150, 
-                                height: 150, 
+                                width: 125, 
+                                height: 125, 
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(20),
                                   child: product.imageUrl.isNotEmpty
