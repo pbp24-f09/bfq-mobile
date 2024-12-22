@@ -163,56 +163,61 @@ class _UserProfilePageState extends State<UserProfilePage> {
       builder: (BuildContext context, StateSetter setState) {
         return AlertDialog(
           backgroundColor: Colors.white,
+          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8), // Sesuaikan padding
+          insetPadding: const EdgeInsets.symmetric(horizontal: 40, vertical: 24), // Batas dari tepi layar
           title: const Text(
             'Edit Photo',
-            style: TextStyle(color: Color(0xFFB48125)),
+            style: TextStyle(color: Color(0xFFB48125), fontSize: 18, fontWeight:FontWeight.bold), // Ukuran font lebih kecil
           ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                controller: _photoUrlController,
-                decoration: const InputDecoration(
-                  labelText: 'Photo URL',
-                  border: OutlineInputBorder(),
-                  hintText: 'Enter the new photo URL',
+          content: SizedBox(
+            width: 300, // Sesuaikan lebar modal
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  controller: _photoUrlController,
+                  decoration: const InputDecoration(
+                    labelText: 'Photo URL',
+                    labelStyle: TextStyle(fontSize: 14),
+                    border: OutlineInputBorder(),
+                    hintText: 'Enter the new photo URL',
+                  ),
+                  style: const TextStyle(fontSize: 14),
                 ),
-              ),
-              const SizedBox(height: 20),
-              isLoading
-                  ? const Center(child: CircularProgressIndicator())
-                  : Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        ElevatedButton(
-                          onPressed: _deletePhoto,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.red,
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 20, vertical: 10),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
+                const SizedBox(height: 20),
+                isLoading
+                    ? const Center(child: CircularProgressIndicator())
+                    : Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          ElevatedButton(
+                            onPressed: _deletePhoto,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.red,
+                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
                             ),
+                            child: const Text('Delete Photo', style: TextStyle(fontSize: 12)),
                           ),
-                          child: const Text('Delete Photo'),
-                        ),
-                        ElevatedButton(
-                          onPressed: () {
-                            _updatePhoto(_photoUrlController.text);
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFFB48125),
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 20, vertical: 10),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
+                          ElevatedButton(
+                            onPressed: () {
+                              _updatePhoto(_photoUrlController.text);
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xFFB48125),
+                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
                             ),
+                            child: const Text('Save Changes', style: TextStyle(fontSize: 12)),
                           ),
-                          child: const Text('Save Changes'),
-                        ),
-                      ],
-                    ),
-            ],
+                        ],
+                      ),
+              ],
+            ),
           ),
         );
       },
@@ -278,78 +283,87 @@ class _UserProfilePageState extends State<UserProfilePage> {
       builder: (BuildContext context, StateSetter setState) {
         return AlertDialog(
           backgroundColor: Colors.white,
+          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          insetPadding: const EdgeInsets.symmetric(horizontal: 40, vertical: 24),
           title: const Text(
             'Delete Account',
-            style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+            style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold, fontSize: 18),
           ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Text(
-                'Are you sure you want to delete your account? This action cannot be undone.',
-                style: TextStyle(fontSize: 12),
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: _usernameController,
-                decoration: const InputDecoration(
-                  labelText: 'Username',
-                  border: OutlineInputBorder(),
+          content: SizedBox(
+            width: 300, // Sesuaikan lebar modal
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text(
+                  'Are you sure you want to delete your account? This action cannot be undone.',
+                  style: TextStyle(fontSize: 12),
                 ),
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: _passwordController,
-                obscureText: true,
-                decoration: const InputDecoration(
-                  labelText: 'Password',
-                  border: OutlineInputBorder(),
+                const SizedBox(height: 16),
+                TextField(
+                  controller: _usernameController,
+                  decoration: const InputDecoration(
+                    labelText: 'Username',
+                    labelStyle: TextStyle(fontSize: 14),
+                    border: OutlineInputBorder(),
+                  ),
+                  style: const TextStyle(fontSize: 14),
                 ),
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: _confirmPasswordController,
-                obscureText: true,
-                decoration: const InputDecoration(
-                  labelText: 'Confirm Password',
-                  border: OutlineInputBorder(),
+                const SizedBox(height: 16),
+                TextField(
+                  controller: _passwordController,
+                  obscureText: true,
+                  decoration: const InputDecoration(
+                    labelText: 'Password',
+                    labelStyle: TextStyle(fontSize: 14),
+                    border: OutlineInputBorder(),
+                  ),
+                  style: const TextStyle(fontSize: 14),
                 ),
-              ),
-              const SizedBox(height: 20),
-              isLoading
-                  ? const CircularProgressIndicator()
-                  : Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        ElevatedButton(
-                          onPressed: () {
-                            Navigator.pop(context); // Close modal
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.grey,
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 24, vertical: 12),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
+                const SizedBox(height: 16),
+                TextField(
+                  controller: _confirmPasswordController,
+                  obscureText: true,
+                  decoration: const InputDecoration(
+                    labelText: 'Confirm Password',
+                    labelStyle: TextStyle(fontSize: 14),
+                    border: OutlineInputBorder(),
+                  ),
+                  style: const TextStyle(fontSize: 14),
+                ),
+                const SizedBox(height: 20),
+                isLoading
+                    ? const CircularProgressIndicator()
+                    : Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          ElevatedButton(
+                            onPressed: () {
+                              Navigator.pop(context); // Close modal
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.grey,
+                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
                             ),
+                            child: const Text('Cancel', style: TextStyle(fontSize: 12)),
                           ),
-                          child: const Text('Cancel'),
-                        ),
-                        ElevatedButton(
-                          onPressed: _deleteAccount,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.red,
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 24, vertical: 12),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
+                          ElevatedButton(
+                            onPressed: _deleteAccount,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.red,
+                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
                             ),
+                            child: const Text('Confirm Delete', style: TextStyle(fontSize: 12)),
                           ),
-                          child: const Text('Confirm Delete'),
-                        ),
-                      ],
-                    ),
-            ],
+                        ],
+                      ),
+              ],
+            ),
           ),
         );
       },
@@ -415,20 +429,22 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                   onPressed: () {
                                     showDialog(
                                       context: context,
-                                      builder: (BuildContext context) =>
-                                          _editPhotoModal(context),
+                                      builder: (BuildContext context) => _editPhotoModal(context),
                                     );
                                   },
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: const Color(0xFFB48125),
                                     foregroundColor: Colors.white,
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 24, vertical: 12),
+                                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8), // Sesuaikan padding
+                                    minimumSize: const Size(100, 40), // Ukuran minimum tombol
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(10),
                                     ),
                                   ),
-                                  child: const Text("Edit Photo"),
+                                  child: const Text(
+                                    "Edit Photo",
+                                    style: TextStyle(fontSize: 12), // Ukuran teks lebih kecil
+                                  ),
                                 ),
                                 const SizedBox(height: 10),
                                 ElevatedButton(
@@ -441,13 +457,16 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.red,
                                     foregroundColor: Colors.white,
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 24, vertical: 12),
+                                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8), // Sesuaikan padding
+                                    minimumSize: const Size(100, 40), // Ukuran minimum tombol
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(10),
                                     ),
                                   ),
-                                  child: const Text("Delete Acc"),
+                                  child: const Text(
+                                    "Delete Acc",
+                                    style: TextStyle(fontSize: 12), // Ukuran teks lebih kecil
+                                  ),
                                 ),
                               ],
                             ),
@@ -516,28 +535,23 @@ class _UserProfilePageState extends State<UserProfilePage> {
   Widget _buildProfileItem(String label, String value) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Row(
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(
-            flex: 1,
-            child: Text(
-              "$label:",
-              style: const TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFFB48125),
-              ),
+          Text(
+            label,
+            style: const TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.bold,
+              color: Color(0xFFB48125),
             ),
           ),
-          Expanded(
-            flex: 2,
-            child: Text(
-              value,
-              style: const TextStyle(
-                fontSize: 12,
-                color: Colors.black,
-              ),
+          const SizedBox(height: 4),
+          Text(
+            value,
+            style: const TextStyle(
+              fontSize: 14,
+              color: Colors.black,
             ),
           ),
         ],

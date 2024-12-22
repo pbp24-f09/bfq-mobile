@@ -19,6 +19,8 @@ class _UserProfileEditPageState extends State<UserProfileEditPage> {
   final TextEditingController _genderController = TextEditingController();
   final TextEditingController _phoneNumberController = TextEditingController();
 
+  final _formKey = GlobalKey<FormState>();
+
   bool isLoading = true;
   String? errorMessage;
   Map<String, dynamic>? profileData;
@@ -61,46 +63,48 @@ class _UserProfileEditPageState extends State<UserProfileEditPage> {
   }
 
   Future<void> _updateProfile() async {
-    try {
-      final request = context.read<CookieRequest>();
-      final response = await request.postJson(
-        "https://redundant-raychel-bfq-f4b73b50.koyeb.app/update-profile-flutter/",
-        jsonEncode(<String, String>{
-          'full_name': _fullNameController.text,
-          'email': _emailController.text,
-          'age': _ageController.text,
-          'gender': _genderController.text,
-          'phone_number': _phoneNumberController.text,
-        }),
-      );
+    if (_formKey.currentState!.validate()) {
+      try {
+        final request = context.read<CookieRequest>();
+        final response = await request.postJson(
+          "https://redundant-raychel-bfq-f4b73b50.koyeb.app/update-profile-flutter/",
+          jsonEncode(<String, String>{
+            'full_name': _fullNameController.text,
+            'email': _emailController.text,
+            'age': _ageController.text,
+            'gender': _genderController.text,
+            'phone_number': _phoneNumberController.text,
+          }),
+        );
 
-      if (response['status'] == 'success') {
-        context.read<UserProvider>().updateUser(
-              fullName: _fullNameController.text,
-              email: _emailController.text,
-              age: int.tryParse(_ageController.text) ?? 0,
-              gender: _genderController.text,
-              phoneNumber: _phoneNumberController.text,
-              profilePhoto: profileData?['profile_photo'] ?? '',
-              username: profileData?['username'] ?? '',
-              role: profileData?['role'] ?? '',
-            );
+        if (response['status'] == 'success') {
+          context.read<UserProvider>().updateUser(
+                fullName: _fullNameController.text,
+                email: _emailController.text,
+                age: int.tryParse(_ageController.text) ?? 0,
+                gender: _genderController.text,
+                phoneNumber: _phoneNumberController.text,
+                profilePhoto: profileData?['profile_photo'] ?? '',
+                username: profileData?['username'] ?? '',
+                role: profileData?['role'] ?? '',
+              );
 
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Profile updated successfully")),
+          );
+
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const UserProfilePage()),
+          );
+        } else {
+          throw Exception(response['message'] ?? "Failed to update profile");
+        }
+      } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Profile updated successfully")),
+          SnackBar(content: Text("Error: ${e.toString()}")),
         );
-
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const UserProfilePage()),
-        );
-      } else {
-        throw Exception(response['message'] ?? "Failed to update profile");
       }
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Error: ${e.toString()}")),
-      );
     }
   }
 
@@ -156,6 +160,7 @@ class _UserProfileEditPageState extends State<UserProfileEditPage> {
                       ),
                     )
                   : Form(
+                      key: _formKey,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -168,7 +173,15 @@ class _UserProfileEditPageState extends State<UserProfileEditPage> {
                             ),
                           ),
                           const SizedBox(height: 16),
-                          _buildFormField("Full Name", _fullNameController),
+                          _buildFormField("Full Name", _fullNameController,
+                              validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Full Name cannot be empty';
+                            } else if (value.length > 50) {
+                              return 'Full Name must not exceed 50 characters';
+                            }
+                            return null;
+                          }),
                           const SizedBox(height: 12),
                           _buildFormField("Email", _emailController),
                           const SizedBox(height: 12),
@@ -205,7 +218,7 @@ class _UserProfileEditPageState extends State<UserProfileEditPage> {
   }
 
   Widget _buildFormField(String label, TextEditingController controller,
-      {bool isNumeric = false}) {
+      {bool isNumeric = false, String? Function(String?)? validator}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -217,12 +230,22 @@ class _UserProfileEditPageState extends State<UserProfileEditPage> {
           ),
         ),
         const SizedBox(height: 8),
-        TextFormField(
-          controller: controller,
-          keyboardType: isNumeric ? TextInputType.number : TextInputType.text,
-          decoration: const InputDecoration(
-            border: OutlineInputBorder(),
-          ),
+        LayoutBuilder(
+          builder: (BuildContext context, BoxConstraints constraints) {
+            return ConstrainedBox(
+              constraints: BoxConstraints(
+                maxWidth: constraints.maxWidth,
+              ),
+              child: TextFormField(
+                controller: controller,
+                keyboardType: isNumeric ? TextInputType.number : TextInputType.text,
+                validator: validator,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                ),
+              ),
+            );
+          },
         ),
       ],
     );
