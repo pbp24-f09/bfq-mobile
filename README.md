@@ -12,7 +12,11 @@
 
 ---
 
-Deployment : 
+**Web Deployment**: [bfq-web](https://redundant-raychel-bfq-f4b73b50.koyeb.app)  
+**Link APK**: [Download APK](https://install.appcenter.ms/orgs/bfq/apps/bfq-mobile/releases/8?source=email#x3D;email&tid=MKXqNPVvnu)
+**Video Promosi**: [Youtube](#)  
+
+---
 
 ## Deskripsi Aplikasi
 Bandung Food Quest (BFQ) adalah sebuah situs web e-commerce yang berfokus pada produk-produk kuliner khas Bandung. Website ini menyediakan platform bagi pelanggan untuk menemukan dan membeli berbagai produk makanan khas kota tersebut. Pada aplikasi ini, admin dapat secara langsung mengelola katalog produk dengan menambahkan, mengedit, dan menghapus produk. Sementara itu, customer dan guest hanya dapat melihat katalog produk pada modul main app (home page).
