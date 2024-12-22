@@ -480,7 +480,9 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                 Row(
                                   children: [
                                     Text(
-                                      profileData!['full_name'] + "'s Profile",
+                                      (profileData?['role'] == 'admin' 
+                                        ? 'Admin' 
+                                        : profileData?['full_name']) + "'s Profile",
                                       style: const TextStyle(
                                         fontSize: 18,
                                         fontWeight: FontWeight.bold,
