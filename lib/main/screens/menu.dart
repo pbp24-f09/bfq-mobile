@@ -391,14 +391,14 @@ class _MenuPageState extends State<MenuPage> {
 
                   final products = snapshot.data!;
                   return GridView.builder(
-                    shrinkWrap: true, // Add this
-                    physics: const NeverScrollableScrollPhysics(), // Add this
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
                     padding: const EdgeInsets.all(16.0),
                     gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
                       crossAxisSpacing: 16,
                       mainAxisSpacing: 10,
-                      childAspectRatio: 0.8,
+                      childAspectRatio: 0.9, 
                     ),
                     itemCount: products.length,
                     itemBuilder: (context, index) {
@@ -414,28 +414,26 @@ class _MenuPageState extends State<MenuPage> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               SizedBox(
-                                width: 220, // Set desired width
-                                height: 220, // Set desired height
-                                child: AspectRatio(
-                                  aspectRatio: 1.0,
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(20),
-                                      image: product.imageUrl.isNotEmpty
-                                          ? DecorationImage(
-                                              image: NetworkImage(product.imageUrl),
-                                              fit: BoxFit.cover,
-                                            )
-                                          : null,
-                                    ),
-                                    child: product.imageUrl.isEmpty
-                                        ? const Icon(Icons.image_not_supported, size: 50, color: Colors.white)
-                                        : null,
-                                  ),
+                                width: 150, 
+                                height: 150, 
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(20),
+                                  child: product.imageUrl.isNotEmpty
+                                      ? Image.network(
+                                          product.imageUrl,
+                                          fit: BoxFit.cover,
+                                        )
+                                      : const Icon(
+                                          Icons.image_not_supported,
+                                          size: 50,
+                                          color: Colors.white,
+                                        ),
                                 ),
                               ),
-                              Padding(
-                                padding: const EdgeInsets.all(10.0),
+                              const SizedBox(height: 10), // Space between image and text
+                              // Ensuring consistent text area
+                              SizedBox(
+                                width: 120, // Match width with image
                                 child: Column(
                                   children: [
                                     Text(
@@ -449,9 +447,10 @@ class _MenuPageState extends State<MenuPage> {
                                       overflow: TextOverflow.ellipsis,
                                       textAlign: TextAlign.center,
                                     ),
-                                    const SizedBox(height: 2),
+                                    const SizedBox(height: 4),
                                     Container(
-                                      padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 8),
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 2, horizontal: 8),
                                       decoration: BoxDecoration(
                                         color: Colors.white,
                                         borderRadius: BorderRadius.circular(12),
