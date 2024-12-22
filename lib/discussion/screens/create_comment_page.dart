@@ -71,7 +71,7 @@ class _CreateCommentPageState extends State<CreateCommentPage> {
                     if (_formKey.currentState!.validate()) {
                       _formKey.currentState!.save();
                       final response = await request.postJson(
-                        "http://127.0.0.1:8000/discussion/create_comments_flutter/${widget.discussionID}/",
+                        "https://redundant-raychel-bfq-f4b73b50.koyeb.app/discussion/create_comments_flutter/${widget.discussionID}/",
                         jsonEncode({"comment": comment}),
                       );
 

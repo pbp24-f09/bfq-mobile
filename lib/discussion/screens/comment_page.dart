@@ -34,7 +34,7 @@ class _CommentsPageState extends State<CommentPage> {
   // Fetch comments for the specific discussion
   Future<void> fetchComments() async {
     var url = Uri.parse(
-        'http://127.0.0.1:8000/discussion/uniqueresponse/json/${widget.discussionID}/');
+        'https://redundant-raychel-bfq-f4b73b50.koyeb.app/discussion/uniqueresponse/json/${widget.discussionID}/');
 
     var response = await http.get(url);
     var data = jsonDecode(utf8.decode(response.bodyBytes));
@@ -50,7 +50,7 @@ class _CommentsPageState extends State<CommentPage> {
   Future<void> deleteComment(
       CookieRequest request, String username, int commentId) async {
     final response = await request.postJson(
-        'http://127.0.0.1:8000/discussion/delete_comments_flutter/$username/$commentId/',
+        'https://redundant-raychel-bfq-f4b73b50.koyeb.app/discussion/delete_comments_flutter/$username/$commentId/',
         jsonEncode({}));
 
     if (response['status'] == 'success') {

@@ -20,7 +20,7 @@ class _DiscussionPageState extends State<DiscussionPage> {
 
   Future<List<Discussion>> fetchDiscussions() async {
     var url = Uri.parse(
-      'http://127.0.0.1:8000/discussion/json/'
+      'https://redundant-raychel-bfq-f4b73b50.koyeb.app/discussion/json/'
     );
     var response = await http.get(
       url,
@@ -49,7 +49,7 @@ class _DiscussionPageState extends State<DiscussionPage> {
   Future<void> deleteComment(CookieRequest request, String username, int id) async {
     try {
       final response = await request.postJson(
-        'http://127.0.0.1:8000/discussion/delete_discussion_flutter/$username/$id/',
+        'https://redundant-raychel-bfq-f4b73b50.koyeb.app/discussion/delete_discussion_flutter/$username/$id/',
         jsonEncode({})
       );
 

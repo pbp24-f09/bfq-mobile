@@ -49,7 +49,7 @@ class _CreateDiscussionState extends State<CreateDiscussionPage> {
 
   Future<List<Product>> fetchProducts() async {
     var url = Uri.parse(
-        'http://127.0.0.1:8000/show_product_json/json/');
+        'https://redundant-raychel-bfq-f4b73b50.koyeb.app/show_product_json/json/');
     var response = await http.get(
       url,
       headers: {"Content-Type": "application/json"},
@@ -83,8 +83,8 @@ class _CreateDiscussionState extends State<CreateDiscussionPage> {
 
       final response = await request.postJson(
         isEditMode
-            ? "http://127.0.0.1:8000/discussion/edit_discussion_flutter/${widget.discussion!.pk}/"
-            : "http://127.0.0.1:8000/discussion/create_discussion_flutter/",
+            ? "https://redundant-raychel-bfq-f4b73b50.koyeb.app/discussion/edit_discussion_flutter/${widget.discussion!.pk}/"
+            : "https://redundant-raychel-bfq-f4b73b50.koyeb.app/discussion/create_discussion_flutter/",
         jsonEncode(data),
       );
 
