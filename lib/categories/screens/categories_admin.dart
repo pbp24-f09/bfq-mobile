@@ -160,95 +160,100 @@ class _CategoriesAdminPageState extends State<CategoriesAdminPage> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(left: 16, right: 16, top: 4, bottom: 25),
+            padding: const EdgeInsets.only(left: 16, right: 16, top: 4, bottom: 20),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                ElevatedButton(                   // Filter button
-                  onPressed: () {
-                    showFilterForm(context);
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Theme.of(context).colorScheme.secondary,
-                  ),
-                  child: Text(
-                    "Filter",
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.onPrimary,
-                    ),
+                Expanded(
+                  child: Wrap(
+                    spacing: 10,                        // Spacing between widgets
+                    runSpacing: 10,                     // Vertical spacing if wrapped
+                    alignment: WrapAlignment.start,
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    children: [
+                      ElevatedButton(                   // Filter button
+                        onPressed: () {
+                          showFilterForm(context);
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Theme.of(context).colorScheme.secondary,
+                        ),
+                        child: Text(
+                          "Filter",
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.onPrimary,
+                          ),
+                        )
+                      ),
+                      ElevatedButton(                         // Create Product button
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => ProductFormPage(previousWidget: widget)),
+                          );
+                        },
+                        child: const Text('Create Product'),
+                      ),
+                      DropdownMenu(                   // Price sort dropdown
+                        hintText: "Sort Price",
+                        dropdownMenuEntries: const [
+                          DropdownMenuEntry(
+                            value: "Lowest",
+                            label: "Lowest Price",
+                          ),
+                          DropdownMenuEntry(
+                            value: "Highest",
+                            label: "Highest Price",
+                          ),
+                        ], 
+                        onSelected: (value) {
+                          setState(() {
+                            priceOrder = value;
+                            _loadProducts(
+                              query: _searchController.text,
+                              range: selectedRange,
+                              category: selectedCat,
+                              order: priceOrder,
+                            );
+                          });
+                        },
+                        menuStyle: MenuStyle(
+                          shape: WidgetStatePropertyAll(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            )
+                          ),
+                        ),
+                        textStyle: const TextStyle(
+                          decorationColor: Colors.white,
+                          color: Colors.white,
+                        ),
+                        
+                        inputDecorationTheme: InputDecorationTheme(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(
+                              color: Theme.of(context).colorScheme.secondary,
+                            )
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(
+                              color: Theme.of(context).colorScheme.secondary,
+                            )
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(
+                              color: Theme.of(context).colorScheme.onPrimary,
+                            )
+                          ),
+                        ),
+                      ),
+                    ]
                   )
-                ),
-                const Padding(
-                  padding: EdgeInsets.all(10)
-                ),
-                ElevatedButton(                         // Create Product button
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => ProductFormPage(previousWidget: widget)),
-                    );
-                  },
-                  child: const Text('Create Product'),
-                ),
-                const Spacer(),
-                DropdownMenu(                   // Price sort dropdown
-                  hintText: "Sort Price",
-                  dropdownMenuEntries: const [
-                    DropdownMenuEntry(
-                      value: "Lowest",
-                      label: "Lowest Price",
-                    ),
-                    DropdownMenuEntry(
-                      value: "Highest",
-                      label: "Highest Price",
-                    ),
-                  ], 
-                  onSelected: (value) {
-                    setState(() {
-                      priceOrder = value;
-                      _loadProducts(
-                        query: _searchController.text,
-                        range: selectedRange,
-                        category: selectedCat,
-                        order: priceOrder,
-                      );
-                    });
-                  },
-                  menuStyle: MenuStyle(
-                    shape: WidgetStatePropertyAll(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      )
-                    ),
-                  ),
-                  textStyle: const TextStyle(
-                    decorationColor: Colors.white,
-                    color: Colors.white,
-                  ),
-                  
-                  inputDecorationTheme: InputDecorationTheme(
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(
-                        color: Theme.of(context).colorScheme.secondary,
-                      )
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(
-                        color: Theme.of(context).colorScheme.secondary,
-                      )
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(
-                        color: Theme.of(context).colorScheme.onPrimary,
-                      )
-                    ),
-                  ),
-                ),
-              ]
-            ),
+                )
+              ],
+            )
           ),
           Expanded(
             child: FutureBuilder<List<ProductEntry>>(
@@ -259,16 +264,20 @@ class _CategoriesAdminPageState extends State<CategoriesAdminPage> {
                 } else if (snapshot.hasError) {
                   return Center(child: Text('Error: ${snapshot.error}'));
                 } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return const Center(child: Text('No products found.'));
+                  return const Center(child: Text(
+                    'No products found.',
+                    style: TextStyle(color: Colors.white),
+                  ));
                 } else {
                   final products = snapshot.data!;
                   return GridView.builder(
+                    shrinkWrap: true,
                     padding: const EdgeInsets.all(16.0),
                     gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
                       crossAxisSpacing: 16,
                       mainAxisSpacing: 10,
-                      childAspectRatio: 0.8,
+                      childAspectRatio: 0.9, 
                     ),
                     itemCount: products.length,
                     itemBuilder: (context, index) {
@@ -284,30 +293,26 @@ class _CategoriesAdminPageState extends State<CategoriesAdminPage> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               SizedBox(
-                                width: 220, // Set desired width
-                                height: 220, // Set desired height
-                                child: AspectRatio(
-                                  aspectRatio: 1.0,
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(20),
-                                      image: product.fields.image.isNotEmpty
-                                          ? DecorationImage(
-                                              image: NetworkImage(
-                                                'https://redundant-raychel-bfq-f4b73b50.koyeb.app/media/${product.fields.image}'
-                                              ),
-                                              fit: BoxFit.cover,
-                                            )
-                                          : null,
-                                    ),
-                                    child: product.fields.image.isEmpty
-                                        ? const Icon(Icons.image_not_supported, size: 50, color: Colors.white)
-                                        : null,
-                                  ),
+                                width: 150, 
+                                height: 150, 
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(20),
+                                  child: product.fields.image.isNotEmpty
+                                      ? Image.network(
+                                          'https://redundant-raychel-bfq-f4b73b50.koyeb.app/media/${product.fields.image}',
+                                          fit: BoxFit.cover,
+                                        )
+                                      : const Icon(
+                                          Icons.image_not_supported,
+                                          size: 50,
+                                          color: Colors.white,
+                                        ),
                                 ),
                               ),
-                              Padding(
-                                padding: const EdgeInsets.all(10.0),
+                              const SizedBox(height: 10), // Space between image and text
+                              // Ensuring consistent text area
+                              SizedBox(
+                                width: 120, // Match width with image
                                 child: Column(
                                   children: [
                                     Text(
@@ -321,9 +326,10 @@ class _CategoriesAdminPageState extends State<CategoriesAdminPage> {
                                       overflow: TextOverflow.ellipsis,
                                       textAlign: TextAlign.center,
                                     ),
-                                    const SizedBox(height: 2),
+                                    const SizedBox(height: 4),
                                     Container(
-                                      padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 8),
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 2, horizontal: 8),
                                       decoration: BoxDecoration(
                                         color: Colors.white,
                                         borderRadius: BorderRadius.circular(12),
