@@ -84,7 +84,7 @@ class _CategoriesCustomerPageState extends State<CategoriesCustomerPage> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(left: 16, right: 16, top: 4, bottom: 25),
+            padding: const EdgeInsets.only(left: 16, right: 16, top: 4, bottom: 20),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
@@ -171,16 +171,20 @@ class _CategoriesCustomerPageState extends State<CategoriesCustomerPage> {
                 } else if (snapshot.hasError) {
                   return Center(child: Text('Error: ${snapshot.error}'));
                 } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return const Center(child: Text('No products found.'));
+                  return const Center(child: Text(
+                    'No products found.',
+                    style: TextStyle(color: Colors.white),
+                  ));
                 } else {
                   final products = snapshot.data!;
                   return GridView.builder(
+                    shrinkWrap: true,
                     padding: const EdgeInsets.all(16.0),
                     gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
                       crossAxisSpacing: 16,
                       mainAxisSpacing: 10,
-                      childAspectRatio: 0.8,
+                      childAspectRatio: 0.9, 
                     ),
                     itemCount: products.length,
                     itemBuilder: (context, index) {
@@ -196,30 +200,26 @@ class _CategoriesCustomerPageState extends State<CategoriesCustomerPage> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               SizedBox(
-                                width: 220, // Set desired width
-                                height: 220, // Set desired height
-                                child: AspectRatio(
-                                  aspectRatio: 1.0,
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(20),
-                                      image: product.fields.image.isNotEmpty
-                                          ? DecorationImage(
-                                              image: NetworkImage(
-                                                'https://redundant-raychel-bfq-f4b73b50.koyeb.app/media/${product.fields.image}'
-                                              ),
-                                              fit: BoxFit.cover,
-                                            )
-                                          : null,
-                                    ),
-                                    child: product.fields.image.isEmpty
-                                        ? const Icon(Icons.image_not_supported, size: 50, color: Colors.white)
-                                        : null,
-                                  ),
+                                width: 150, 
+                                height: 150, 
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(20),
+                                  child: product.fields.image.isNotEmpty
+                                      ? Image.network(
+                                          'https://redundant-raychel-bfq-f4b73b50.koyeb.app/media/${product.fields.image}',
+                                          fit: BoxFit.cover,
+                                        )
+                                      : const Icon(
+                                          Icons.image_not_supported,
+                                          size: 50,
+                                          color: Colors.white,
+                                        ),
                                 ),
                               ),
-                              Padding(
-                                padding: const EdgeInsets.all(10.0),
+                              const SizedBox(height: 10), // Space between image and text
+                              // Ensuring consistent text area
+                              SizedBox(
+                                width: 120, // Match width with image
                                 child: Column(
                                   children: [
                                     Text(
@@ -233,9 +233,10 @@ class _CategoriesCustomerPageState extends State<CategoriesCustomerPage> {
                                       overflow: TextOverflow.ellipsis,
                                       textAlign: TextAlign.center,
                                     ),
-                                    const SizedBox(height: 2),
+                                    const SizedBox(height: 4),
                                     Container(
-                                      padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 8),
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 2, horizontal: 8),
                                       decoration: BoxDecoration(
                                         color: Colors.white,
                                         borderRadius: BorderRadius.circular(12),
