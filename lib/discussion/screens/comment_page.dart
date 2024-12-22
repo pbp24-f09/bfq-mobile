@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:bfq/discussion/models/Comment.dart';
+import 'package:bfq/discussion/models/comment.dart';
 import 'package:bfq/discussion/screens/create_comment_page.dart';
 import 'package:bfq/discussion/models/discussion.dart';
 import 'package:pbp_django_auth/pbp_django_auth.dart';
