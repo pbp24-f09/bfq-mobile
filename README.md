@@ -14,7 +14,7 @@
 
 **Web Deployment**: [bfq-web](https://redundant-raychel-bfq-f4b73b50.koyeb.app)  
 
-**Link APK**: [Download APK](https://install.appcenter.ms/orgs/bfq/apps/bfq-mobile/releases/8?source=email#x3D;email&tid=MKXqNPVvnu)  
+**Link APK**: [Download APK](https://install.appcenter.ms/orgs/bfq/apps/bfq-mobile/distribution_groups/public)  
 
 **Video Promosi**: [Youtube](https://youtu.be/6syUqjXyVOQ?si=w1jwjNZir18JhAZm)  
 
