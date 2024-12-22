@@ -16,7 +16,7 @@
 
 **Link APK**: [Download APK](https://install.appcenter.ms/orgs/bfq/apps/bfq-mobile/releases/8?source=email#x3D;email&tid=MKXqNPVvnu)  
 
-**Video Promosi**: [Youtube](#)  
+**Video Promosi**: [Youtube](https://youtu.be/6syUqjXyVOQ?si=w1jwjNZir18JhAZm)  
 
 ---
 
