@@ -11,6 +11,7 @@ import 'package:bfq/authentication/screens/login.dart';
 import 'package:bfq/authentication/screens/user_profile.dart';
 import 'package:bfq/authentication/user_provider.dart';
 import 'package:bfq/authentication/screens/change_password.dart';
+import 'package:bfq/discussion/screens/discussion_page.dart';
 
 class LeftDrawer extends StatelessWidget {
   const LeftDrawer({super.key});
@@ -125,6 +126,18 @@ class LeftDrawer extends StatelessWidget {
                         context,
                         MaterialPageRoute(
                           builder: (context) => const BlogListPage(),
+                        ),
+                      );
+                    },
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.group),
+                    title: const Text('Discussion'),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const DiscussionPage(),
                         ),
                       );
                     },
